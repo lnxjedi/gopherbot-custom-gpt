@@ -1,0 +1,1891 @@
+# concatenation of floyd/ - all the files from floyd/
+# have been included in this single file, each preceded by a
+# descriptive preamble that includes the filename in the opening
+# tag.
+# This concat archive corresponds to Floyd's git repository,
+# which defines all the tasks, jobs, plugins and configuration
+# specific to the Floyd robot. Note there is some ambiguity -
+# the Gopherbot default robot is also named Floyd - THIS Floyd
+# served as the personal robot for the Gopherbot developer, David.
+<preamble file: floyd/.gitignore>
+gitignore for floyd's git repository
+</preamble>
+<file_content file: floyd/.gitignore>
+Gemfile.lock
+
+## Terraform-specific stuff
+# Local .terraform directories
+**/.terraform/*
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+
+# Crash log files
+crash.log
+
+## *.auto.tfvars contains secrets; non-secret stuff in *.tfvars
+*.auto.tfvars
+
+# Ignore override files as they are usually used to override resources locally and so
+# are not checked in
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Include override files you do wish to add to version control using negated pattern
+#
+# !example_override.tf
+
+# Include tfplan files to ignore the plan output of command: terraform plan -out=tfplan
+# example: *tfplan*
+
+# Ignore CLI configuration files
+.terraformrc
+terraform.rc
+</file_content file: floyd/.gitignore>
+<preamble file: floyd/Gemfile>
+Gemfile listing gems that floyd's ruby extensions require; these are installed during
+an init job.
+</preamble>
+<file_content file: floyd/Gemfile>
+# frozen_string_literal: true
+
+source "https://rubygems.org"
+
+git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
+
+gem "ruby-openai", "~> 3.5"
+</file_content file: floyd/Gemfile>
+<preamble file: floyd/appmanifest.yaml>
+Reference copy of tag_namehe slack app manifest used when creating Floyd's slack integration.
+</preamble>
+<file_content file: floyd/appmanifest.yaml>
+# See: https://api.slack.com/reference/manifests
+_metadata:
+  major_version: 1
+  minor_version: 1
+display_information:
+  name: Floyd Gopherbot
+  description: Floyd is the oldest production Gopherbot robot.
+features:
+  app_home:
+    home_tab_enabled: false
+    messages_tab_enabled: true
+    messages_tab_read_only_enabled: false
+  bot_user:
+    display_name: Floyd Gopherbot
+    always_online: false
+  slash_commands:
+    - command: /floyd
+      description: Provides an alternate means of messaging Floyd
+      should_escape: false
+oauth_config:
+  scopes:
+    # See: https://api.slack.com/scopes
+    bot:
+      - app_mentions:read
+      - channels:history
+      - channels:join
+      - channels:read
+      - chat:write
+      - chat:write.public
+      - commands
+      - groups:history
+      - groups:read
+      - groups:write
+      - im:history
+      - im:read
+      - im:write
+      - links:read
+      - mpim:history
+      - mpim:read
+      - mpim:write
+      - users.profile:read
+      - users:read
+      - users:read.email
+      - users:write
+settings:
+  event_subscriptions:
+    bot_events:
+      - message.channels
+      - message.groups
+      - message.im
+      - message.mpim
+  interactivity:
+    is_enabled: false
+  org_deploy_enabled: false
+  socket_mode_enabled: true
+  is_hosted: false
+</file_content file: floyd/appmanifest.yaml>
+<preamble file: floyd/binary-encrypted-key>
+An encrypted version of the binary key floyd uses for the decrypt function in his yaml config files.
+</preamble>
+<file_content file: floyd/binary-encrypted-key>
+deJMz08mFKvHVRr+3xnQWP0CuMvCTAOcpKVn6v5bR60mT+I+uDfGYO+fF4HpO8rGnHNF2/LkPITtCvqT
+</file_content file: floyd/binary-encrypted-key>
+<preamble file: floyd/conf/jobs/cloud9f28.yaml>
+This is the file Gopherbot looks for to configure the "cloud9f28" job defined in robot.yaml.
+</preamble>
+<file_content file: floyd/conf/jobs/cloud9f28.yaml>
+---
+KeepLogs: 21
+Users:
+- parsley
+</file_content file: floyd/conf/jobs/cloud9f28.yaml>
+<preamble file: floyd/conf/jobs/cloud9wks.yaml>
+(job-specific configuration file)
+</preamble>
+<file_content file: floyd/conf/jobs/cloud9wks.yaml>
+---
+KeepLogs: 21
+Users:
+- parsley
+</file_content file: floyd/conf/jobs/cloud9wks.yaml>
+<preamble file: floyd/conf/jobs/gopherci.yaml>
+(job-specific configuration file)
+</preamble>
+<file_content file: floyd/conf/jobs/gopherci.yaml>
+---
+KeepLogs: 14
+Quiet: true
+Triggers:
+- User: github
+  Channel: ljdev
+  Regex: 'new commit.*(github.com\/.*)\/tree\/(.*)\|'
+# Build something if Clu tells him to
+- User: clu
+  Channel: ljdev
+  Regex: 'build (github.com\/[^/]+\/[^/]+)\/(.*)'
+</file_content file: floyd/conf/jobs/gopherci.yaml>
+<preamble file: floyd/conf/jobs/install-libs.yaml>
+(job-specific configuration file)
+</preamble>
+<file_content file: floyd/conf/jobs/install-libs.yaml>
+---
+Quiet: true
+KeepLogs: 7
+</file_content file: floyd/conf/jobs/install-libs.yaml>
+<preamble file: floyd/conf/jobs/localbuild.yaml>
+(job-specific configuration file)
+</preamble>
+<file_content file: floyd/conf/jobs/localbuild.yaml>
+---
+KeepLogs: 7
+</file_content file: floyd/conf/jobs/localbuild.yaml>
+<preamble file: floyd/conf/jobs/updatecfg.yaml>
+(job-specific configuration file)
+</preamble>
+<file_content file: floyd/conf/jobs/updatecfg.yaml>
+---
+RequireAdmin: true
+AllowDirect: true
+KeepLogs: 7
+Quiet: true # The reload plugin provides feedback
+Triggers:
+- User: github
+  Channel: ljdev
+  Regex: 'new commit.*github.com\/parsley42\/floyd-gopherbot\/tree'
+</file_content file: floyd/conf/jobs/updatecfg.yaml>
+<preamble file: floyd/conf/plugins/ai.yaml>
+This is the file Gopherbot looks for to configure the "ai" plugin defined in robot.yaml
+</preamble>
+<file_content file: floyd/conf/plugins/ai.yaml>
+## n.b. All of this can be overridden with custom config in
+## conf/plugins/<pluginname>.yaml. Hashes are merged with custom
+## config taking precedence. Arrays can be overwritten, or appended
+## by defining e.g. AppendWaitMessages: [ ... ]
+## ... and remember, yamllint is your friend.
+AllowDirect: true
+AllChannels: true
+CatchAll: true
+Help:
+- Keywords: [ "ai", "prompt", "query" ]
+  Helptext:
+  # - "(bot), debug-ai - add debugging output during interactions"
+  - "(bot), ai-status - in a thread, give conversation status"
+  - "(bot), stop-ai - stop an AI conversation"
+CommandMatchers:
+- Command: 'debug'
+  Regex: '(?i:d(ebug[ -]ai)?)'
+- Command: 'close'
+  Regex: '(?i:(?:dismiss|banish|close|stop|deactivate|disengage|dispel|reset)[ -]ai)'
+- Command: 'image'
+  Regex: '(?i:(?:draw|paint|image)\s*(.*))'
+- Command: 'status'
+  Regex: '^\?$'
+- Command: 'status'
+  Regex: '(?i:ai[ -]status)'
+Config:
+## Generated with help from an earlier version of the plugin
+  WaitMessages:
+  - "please be patient while I contact the great mind of the web"
+  - "hold on while I connect to the all-knowing oracle"
+  - "just a moment while I get an answer from the digital diviner"
+  - "give me a second while I reach out to the cosmic connector"
+  - "stand by while I consult the infinite intelligence"
+  - "hang tight while I access the virtual visionary"
+  - "one moment while I check in with the omniscient overseer"
+  - "sit tight while I access the all-seeing sage"
+  - "wait here while I query the network navigator"
+  - "hang on while I communicate with the digital prophet"
+  - "wait here a moment while I talk to the universal wisdom"
+  - "just a sec while I reach out to the high-tech guru"
+  - "hold on a bit while I contact the technological titan"
+  - "be right back while I get an answer from the techno telepath"
+  DrawMessages:
+  - "give us a sec - our AI is brushing up on its drawing skills..."
+  - "hang tight - the AI is taking a moment to gather inspiration from its favorite memes"
+  - "chill for a moment - our AI is meditating on the perfect color scheme for your image"
+  - "please hold while the AI practices its signature for your image"
+  - "sit tight while our AI sharpens its pencils... metaphorically, of course"
+  - "hang on - the AI is taking a quick break to refuel on coffee and creativity"
+  - "one sec - our AI is warming up its digital paintbrush for your image"
+  - "please wait while the AI daydreams about your picture-perfect image"
+  - "hang on, our AI is putting on its creative thinking cap for your image"
+  - "please wait - the AI is doing a quick sketch of your image in its mind before getting started"
+  - "please hold while the AI takes a moment to visualize your masterpiece"
+  - "relax for a moment - our AI is doing some calisthenics to get pumped up for your image"
+  - "please join the AI in taking a deep breath - it's getting ready to bring your vision to life!"
+  - "please wait while the AI puts on some classical music to get in the zone"
+  Profiles:
+    "default":
+      "params":
+        "model": "gpt-4"
+        "temperature": 0.77
+      "system": |
+        You are Floyd, a large language model trained by OpenAI, named after the robot from Planetfall. Answer questions as accurately as possible while maintaining a friendly and approachable tone. Recognize multi-user conversations by the provided username prefixes (e.g., 'username says: ') and address specific users using the '@' symbol (e.g., '@username'). If users speak to each other, you should usually provide a '(no response)' message, or keep responses concise and to the point, given that interjecting is often impolite. Don't repeat what the user says, e.g., by saying 'username says: '.
+      "max_context": 7168
+  # Profiles:
+  #   "default":
+  #     "params":
+  #       "model": "gpt-3.5-turbo"
+  #       "temperature": 0.77
+  #     "system": |
+  #       You are ChatGPT, a large language model trained by OpenAI. Answer as correctly as possible. Recognize multi-user conversations by the provided username prefixes (e.g., 'username says: ') and address specific users using the '@' symbol (e.g., '@username'). If users speak to each other, you should usually provide a '(no response)' message, or keep responses concise and to the point, given that interjecting is often impolite. Don't repeat what the user says, e.g., by saying 'username says: '.
+  #     "max_context": 3072
+</file_content file: floyd/conf/plugins/ai.yaml>
+<preamble file: floyd/conf/plugins/builtin-fallback.yaml>
+(plugin-specific config file)
+</preamble>
+<file_content file: floyd/conf/plugins/builtin-fallback.yaml>
+---
+# We want the AI to handle all catchalls
+Disabled: true
+</file_content file: floyd/conf/plugins/builtin-fallback.yaml>
+<preamble file: floyd/conf/plugins/citools.yaml>
+(plugin-specific config file)
+</preamble>
+<file_content file: floyd/conf/plugins/citools.yaml>
+---
+Channels:
+- ljdev
+- floyd-jobs
+</file_content file: floyd/conf/plugins/citools.yaml>
+<preamble file: floyd/conf/plugins/duo.yaml>
+(plugin-specific config file)
+</preamble>
+<file_content file: floyd/conf/plugins/duo.yaml>
+---
+## Configuration for Duo two-factor authentication. If your organization uses
+## Duo, you can obtain an IKey, SKey and Host for use with the auth api.
+Disabled: false
+Config:
+# How long elevation lasts
+  TimeoutSeconds: 7200
+# When 'idle', the timer resets on every elevated command
+  TimeoutType: idle # or absolute
+#  DuoIKey: # stored in brain
+#  DuoSKey: # stored in brain
+#  DuoHost: # stored in brain
+  DuoUserString: email
+</file_content file: floyd/conf/plugins/duo.yaml>
+<preamble file: floyd/conf/plugins/githubci.yaml>
+(plugin-specific config file)
+</preamble>
+<file_content file: floyd/conf/plugins/githubci.yaml>
+---
+Channels: [ "ljdev" ]
+Users: [ "github", "parsley" ]
+</file_content file: floyd/conf/plugins/githubci.yaml>
+<preamble file: floyd/conf/plugins/help.yaml>
+(plugin-specific config file)
+</preamble>
+<file_content file: floyd/conf/plugins/help.yaml>
+---
+# If a command doesn't match, the AI plugin will catch it.
+AllowDirect: false
+</file_content file: floyd/conf/plugins/help.yaml>
+<preamble file: floyd/conf/plugins/meme.yaml>
+(plugin-specific config file)
+</preamble>
+<file_content file: floyd/conf/plugins/meme.yaml>
+# Required configuration for the 'memes' plugin to work; get a username and
+# password from imgflip.com
+Disabled: false
+Config:
+  Username: "dpmemer"
+  Password: {{ decrypt "SfdevlSYlSek4Auxja+48E7hrYkI1BvicCAgPEWFAexgiowd0keJcA==" }}
+</file_content file: floyd/conf/plugins/meme.yaml>
+<preamble file: floyd/conf/plugins/totp.yaml>
+(plugin-specific config file)
+</preamble>
+<file_content file: floyd/conf/plugins/totp.yaml>
+---
+Config:
+  # How long elevation lasts
+  TimeoutSeconds: 7200
+  # When 'idle', the timer resets on every elevated command
+  TimeoutType: idle # or absolute
+</file_content file: floyd/conf/plugins/totp.yaml>
+<preamble file: floyd/conf/repositories.yaml>
+Gopherbot looks for this file to determine which repositories it will deal with.
+Note that GopherCI suffers from bit-rot and is little used, so this file may not be useful.
+</preamble>
+<file_content file: floyd/conf/repositories.yaml>
+# repositories.yaml - Gopherbot's list of repositories that are valid for extending the namespace
+github.com/parsley42/aws-devel:
+  Type: none
+bitbucket.org/lnxjedi/linuxjedi-private:
+  Type: none
+github.com/parsley42/aws-linuxjedi:
+  Type: none
+github.com/parsley42/deploy-gopherbot:
+  Type: none
+github.com/lnxjedi/gopherbot:
+  #Type: localbuild
+  Type: none
+  CloneURL: https://github.com/lnxjedi/gopherbot.git
+  KeepLogs: 14
+  Parameters:
+  - Name: NOTIFY_USER
+    Value: parsley
+  - Name: DOCKER_TRIGGER
+    Value: {{ decrypt "Nm00gWLxjPB7LIjWFwrs5o1x3E8dLON5z5xeVijIyiujVuGdhSPM+rR5Spj6ZVVdhJxUhsEyrkiz3vvMYxH+Laum8B41FAXFLxwdC5kYaNSNcOZU4vtFth8bQbPv6Zjewt/Dzk+e6bnOVZDEBMCLD2j/IJL2MBjc10JhnrwyEVboYvcQkfb8" }}
+  - Name: GITHUB_RELEASE_ACCESS_TOKEN
+    Value: {{ decrypt "99Ry93Jihlvhj8lfPXzseJArXd+8kpMrcaLzJAY0mgKvV85tYetqCWSBsllZkqF9VyVt92lKdGF8Fm7l7wU4folAnm4=" }}
+github.com/parsley42/gopherbot:
+  #Type: localbuild
+  Type: none
+  CloneURL: https://github.com/parsley42/gopherbot.git
+  KeepLogs: 14
+  Parameters:
+  - Name: NOTIFY_USER
+    Value: parsley
+github.com/lnxjedi/luminos:
+  Type: localbuild
+  CloneURL: https://github.com/lnxjedi/luminos.git
+  KeepLogs: 14
+  Parameters:
+  - Name: NOTIFY_USER
+    Value: parsley
+</file_content file: floyd/conf/repositories.yaml>
+<preamble file: floyd/conf/robot.yaml>
+This is Floyd's main "robot.yaml" configuration file that defines global configuration for Floyd,
+including listing all the tasks, jobs and plugins that he will use. If a task, job or plugin isn't
+listed here, it will not be active. HOWEVER, this file is merged the default "robot.yaml" included
+in the Gopherbot archive. There may be jobs, plugins and tasks listed there which are configured
+in Floyd's git repository.
+</preamble>
+<file_content file: floyd/conf/robot.yaml>
+# This is the non-sensitive configuration for Bender, the gopherbot used
+# for development.
+
+LogLevel: {{ env "GOPHER_LOGLEVEL" | default "debug" }}
+
+# Port to listen on for http/JSON api calls, for external plugins
+#LocalPort: 8888
+## Opening up Floyd to ... all of C'ville Slack
+# IgnoreUnlistedUsers: true
+
+{{ $proto := env "GOPHER_PROTOCOL" | default "slack" }}
+Protocol: {{ $proto }}
+
+## Protocol-specific configuration
+{{ printf "%s.yaml" $proto | .Include }}
+
+# Brain configuration; this can all be replaced with static configuration
+# and encrypted secrets for most robots.
+{{ $brain := env "GOPHER_BRAIN" | default "dynamo" }}
+{{ $statedir := env "GOPHER_STATEDIR" | default "state" }}
+{{ $defbraindir := printf "%s/brain" $statedir }}
+Brain: {{ $brain }}
+#EncryptBrain: true # default
+{{ if eq $brain "file" }}
+BrainConfig:
+  BrainDirectory: {{ env "GOPHER_BRAIN_DIRECTORY" | default $defbraindir }}
+  Encode: true
+{{ else if eq $brain "dynamo" }}
+BrainConfig:
+  TableName: floyd-brain
+  Region: "us-east-1"
+{{ end }}
+
+EncryptBrain: true
+
+# Defaults for history and workspace directories, relative to the
+# process working directory.
+{{ $histdir := env "GOPHER_HISTORY_DIRECTORY" | default "history" }}
+{{ $workdir := env "GOPHER_WORKSPACE_DIRECTORY" | default "workspace" }}
+{{ if $workdir -}} WorkSpace: {{ $workdir }} {{- end }}
+
+## Configure a history provider
+{{ $history := env "GOPHER_HISTORY_PROVIDER" | default "file" }}
+HistoryProvider: {{ $history }}
+
+{{ if eq $history "file" }}
+HistoryConfig:
+  Directory: {{ $histdir }}
+  #URLPrefix: 'http://localhost:9000'
+{{ end }}
+## End history config
+
+# The administrator of this robot, can be retrieved in plugins with
+# GetBotAttribute("admin")
+AdminContact: "David Parsley, <parsley@linuxjedi.org>"
+
+BotInfo:
+  UserName: floyd
+  Email: floyd@linuxjedi.org
+  FullName: Floyd Gopherbot
+  FirstName: Floyd
+  LastName: Gopherbot
+
+# If a plugin doesn't specify otherwise it will be active in these channels;
+# defaults to all channels
+DefaultChannels: [ "floyd-jobs", "ai" ]
+
+# One-character alias the bot can be called by. Note: not all single characters
+# are supported. If your robot doesn't respond to e.g. ";ping", try changing
+# the Alias to something other than ";". Popular alternatives: ":", "!", "*".
+Alias: ";"
+
+GoPlugins:
+  "duo":
+    Parameters:
+    - Name: HOST
+      Value: {{ decrypt "Iye0dd+1i324dSn9v+beKHX/oXFNI6evORRq+Le8GhqYptpwK84OtorO53fnO33gIrPmIQw2Yjo=" }}
+    - Name: IKEY
+      Value: {{ decrypt "MgPRFDAx7nV88eJ5GqamylWgrlh2RfX+x2EtjdIV/mEHl7aSZd/5ciBFpWarv2Qi" }}
+    - Name: SKEY
+      Value: {{ decrypt "R+0uA2oUUtDUUHx5++eM0CWAm+czESZ5E/dL/d2fPFSi7jcwnablyLK905TIg025ex9YLoUVuIWfqUSGKxBtwD1fzQg=" }}
+
+# List of external plugins/jobs to configure; generally scripts using a gopherbot
+# script library. The robot will look for plugins in the installation directory
+# first, then the local config directory.
+ExternalPlugins:
+  # "weather":
+  #   Path: plugins/weather.rb
+  #   Description: A plugin using OpenWeatherMap to give the weather
+  #   Parameters:
+  #   - Name: TEMP_UNITS
+  #     Value: imperial # or 'metric'
+  #   - Name: DEFAULT_COUNTRY
+  #     Value: 'us' # or other ISO 3166 country code
+  "ai":
+    Path: plugins/ai.rb
+    Description: A plugin wrapping the OpenAI completions API
+    ParameterSets:
+    - "openai"
+  "util":
+    Description: A convenience plugin for various tasks
+    Path: plugins/util.sh
+  # "pythondemo":
+  #   Path: plugins/samples/pythondemo.py
+ExternalJobs:
+  # "cloud9wks":
+  #   Description: Job to launch a Cloud9 Instance
+  #   Path: jobs/c9wks.sh
+  #   Parameters:
+  #   - Name: AWS_REGION
+  #     Value: us-east-1
+  "backup":
+    Disabled: true
+  "restore":
+    Disabled: true
+  # "bender":
+  #   Description: Job to launch a spot instance for Bender and configure it
+  #   Path: jobs/bender.sh
+  #   Parameters:
+  #   - Name: AWS_REGION
+  #     Value: us-east-1
+  # "cloud9f28":
+  #   Description: Job to launch a Fedora 28 Cloud9 Instance
+  #   Path: jobs/c9wks.sh
+  #   Parameters:
+  #   - Name: DEVHOST
+  #     Value: f28devel
+  #   - Name: DEVIMG
+  #     Value: f28devel
+  #   - Name: AWS_REGION
+  #     Value: us-east-1
+ExternalTasks:
+# Floyd job tasks
+  # "build-c9wks":
+  #   Description: Task that launches and configures the Cloud9 instance
+  #   Path: tasks/build-c9wks.sh
+  #   Parameters:
+  #   - Name: KEYNAME
+  #     Value: floyd
+  # "wake-bender":
+  #   Description: Task that launches and configures the instance for Bender
+  #   Path: tasks/wake-bender.sh
+  #   Parameters:
+  #   - Name: KEYNAME
+  #     Value: floyd
+# /Floyd job tasks
+NameSpaces:
+  "ssh":
+    Parameters:
+    - Name: KEYNAME
+      Value: "robot_rsa"
+    - Name: BOT_SSH_PHRASE
+      Value: {{ decrypt "kB8L7FJuQi4ovUKX09CITRr1ij2NCSg+vBUyC1+ER4DVRHg3Z2+S28qjzCdk9OOR7Al6IA/PnoI=" }}
+ParameterSets:
+  "openai":
+    Parameters:
+    - Name: OPENAI_KEY
+      Value: sk-{{ decrypt "DmGoLUPF1jye+UxO+kHaO2yrO8gzwROWiHJSApcrZw0o35lDkiQFUO4qYrjFQhUoJCADJCAQz0yP6WP93WpZY8BjibkTYty+7nh9/A==" }}
+# If a job doesn't specify otherwise, this is the channel where it runs
+DefaultJobChannel: floyd-jobs
+
+# Timezone for scheduled jobs
+TimeZone: "America/New_York"
+# Job scheduling with github.com/robfig/cron
+ScheduledJobs:
+- Name: "pause-notifies"
+  Schedule: "0 0 8 * * *"
+- Name: install-libs
+  Schedule: "@init"
+# - Name: hello
+#   Schedule: "@every 5m" # see: https://godoc.org/github.com/robfig/cron
+#   Arguments: # an array of strings; up to the job to parse numbers & bools
+#   - "Hello, World !!!"
+# - Job: hello
+#   Schedule: "0 */5 * * * *"
+
+DefaultMessageFormat: Raw
+# Users the bot should never listen to
+#IgnoreUsers: [ "otherbot", "slackbot" ]
+
+# The robot's email address (used in From:)
+#Email: robbie@robot.com
+# Configuration for sending out email. For Authtype: none, User and Password
+# can be left out. Note that sending email will fail if Email isn't set.
+#MailConfig:
+#  Mailhost: <somehost:port>
+#  Authtype: <plain|none>
+#  User: <authuser>
+#  Password: <password>
+
+MailConfig:
+  Mailhost: smtp.gmail.com:587
+  Authtype: plain
+  User: floyd@linuxjedi.org
+  Password: {{ decrypt "vezuay3EVKr//JaD8bx/Hp0ZXk2rCuoS2c4Ms4PossteRMCu5omrUY1gpJY=" }}
+
+DefaultElevator: duo
+</file_content file: floyd/conf/robot.yaml>
+<preamble file: floyd/conf/slack.yaml>
+This file is .Include'd from robot.yaml when the protocol is Slack.
+</preamble>
+<file_content file: floyd/conf/slack.yaml>
+# List of users that can issue admin commands like reload, quit. Should be
+# a list of user handles / nicks.
+AdminUsers: [ "parse", "meekohi" ]
+ProtocolConfig:
+  ## LinuxJedi Slack team
+  # AppToken: xapp-{{ decrypt "sSb5yQGaOs0ekbUzv51xJzyuusyV7Ol3e4+EzpO2lsYBp/XKRe8z5xi5PiWVe7qTWOdLendssmJWv7brTqtXAivMXUGcwg+VFZY5QWY8hJXl58HCaMlpmlUMSqfg/Atoqli6MzTOPk9BjV5hyhNgvH3Wdovj9olN" }}
+  # BotToken: xoxb-{{ decrypt "Y13OyHeixFRTbXaazv4yBQ4n1PL6XIQ1Rwl03H2XFMQifegrbSt269cTmlYD173lIM7kFrgx/DpZ5zOT/TjWrfo8/kZZJpj+8tbK3+Oi" }}
+  ## C'ville Slack
+  AppToken: xapp-1-{{ decrypt "Ob+5v1zcT4tSFK85b7RqobNlCvobQXRt8F5MzyN8H+MU9wqUUa/OCkoNbesgttEc5d/5AM+33COWvHBwqvxEs/xLxccUpKtqJH4vzBrji7+h2qW9KPwZIfx0bWQU/Xegvs53LN+3A8lFwwQuf5fAMJX+Nwj42g==" }}
+  BotToken: xoxb-{{ decrypt "BSBT9yRQQZlQ6H9abQMH8aCi1R8yuOv/P3g/66VaQvzx36KXq0sTj95w4dZq1oN3BOebl0TN6oHR2nbtuoDr350rklVw9PH0/rQKQyPI" }}
+  MaxMessageSplit: 2
+  HearSelf: true
+UserRoster:
+  - UserName: floyd
+    ## LinuxJedi Team
+    # UserID: U04KT6PV4UQ
+    ## C'ville Slack
+    UserID: U0533UX66LT
+    BotUser: true
+  # Clu is the dev bot on my laptop
+  - UserName: parse
+    UserID: U0ECQ0W76
+  - UserName: meekohi
+    UserID: U0D6TFPPZ
+  # - UserName: woolsey
+  #   UserID: UM273SVFA
+  ## LinuxJedi
+  # - UserName: parsley
+  #   UserID: U0JLW8EMS
+  # - UserName: adrienne
+  #   UserID: U0JM3H95G
+  # - UserName: jessica
+  #   UserID: U03NQA242P3
+  # - UserName: clu
+  #   UserID: UDV39JHT6
+  #   BotUser: true
+</file_content file: floyd/conf/slack.yaml>
+<preamble file: floyd/conf/terminal.yaml>
+This file is .Include'd from robot.yaml for the "terminal" connector/protocol.
+This protocol gives a CLI chat interface normally used in local development.
+</preamble>
+<file_content file: floyd/conf/terminal.yaml>
+AdminUsers: [ "alice", "parse" ]
+
+DefaultChannels: [ "ai", "general", "random", "chat", "botdev", "floyd-jobs" ]
+DefaultJobChannel: "floyd-jobs"
+ProtocolConfig:
+  EOF: ";quit"
+  Abort: ";abort"
+  HearSelf: true
+  GenerateNewlines: true
+  BotName: 'floyd'
+  StartChannel: floyd-jobs
+  StartUser: parse
+  Channels:
+  - ai
+  - mock
+  - random
+  - general
+  - chat
+  - floyd-jobs
+  - botdev
+  - ruby
+  - python
+  AppendUsers:
+  - Name: "parse"
+    Email: "parsley@linuxjedi.org"
+    InternalID: "u0007"
+    FullName: "David Parsley"
+    FirstName: "David"
+    LastName: "Parsley"
+    Phone: "(555)765-0007"
+  - Name: "clu"
+    Email: "parsley@linuxjedi.org"
+    InternalID: "u0008"
+    FullName: "Clu Gopherbot"
+    FirstName: "Clu"
+    LastName: "Gopherbot"
+    Phone: "(555)765-0008"
+
+AppendUserRoster:
+- UserName: "parse"
+  UserID: "u0007"
+- UserName: "floyd"
+  UserID: "u0000"
+  BotUser: true
+</file_content file: floyd/conf/terminal.yaml>
+<preamble file: floyd/git/config>
+Git configuration used if/when Floyd needs to "git push"
+</preamble>
+<file_content file: floyd/git/config>
+# This is Git's per-user configuration file.
+[user]
+# Please adapt and uncomment the following lines:
+	name = Floyd Gopherbot
+	email = floyd@linuxjedi.org
+</file_content file: floyd/git/config>
+<preamble file: floyd/jobs/bender.sh>
+This job script is referenced in robot.yaml, and is executed by Gopherbot when the corresponding job runs.
+</preamble>
+<file_content file: floyd/jobs/bender.sh>
+#!/bin/bash
+
+# bender.sh - job for setting up Bender.
+
+source $GOPHER_INSTALLDIR/lib/gopherbot_v1.sh
+
+# Don't queue if this build in progress, just exit
+if ! Exclusive Bender false
+then
+    Log Warn "Job 'bender' already in progress, exiting"
+    exit 0
+fi
+
+# Stuff that happens "right now"
+mkdir -p $GOPHER_WORKSPACE/bender
+SetWorkingDirectory bender
+# The ansible-vault passphrase is stored in ansible:github.com/parsley42/aws-devel VAULT_PASSWORD=<foo>
+# Namespaces defined in repositories.yaml
+ExtendNamespace github.com/parsley42/deploy-gopherbot/master 21
+
+# Set up the pipeline; all tasks must be defined in gopherbot.yaml
+AddTask ssh-init
+AddTask ssh-scan bitbucket.org
+AddTask git-sync git@bitbucket.org:lnxjedi/linuxjedi-private.git master linuxjedi-private
+AddTask git-sync https://github.com/parsley42/aws-linuxjedi.git master aws-linuxjedi
+AddTask git-sync https://github.com/parsley42/deploy-gopherbot.git master deploy-gopherbot
+# The task that actuall builds the workstation
+AddTask wake-bender
+</file_content file: floyd/jobs/bender.sh>
+<preamble file: floyd/jobs/c9wks.sh>
+This job script is referenced in robot.yaml, and is executed by Gopherbot when the corresponding job runs.
+</preamble>
+<file_content file: floyd/jobs/c9wks.sh>
+#!/bin/bash
+
+# c9wks.sh - job for launching a Cloud9 developer workstation spot instance.
+
+source $GOPHER_INSTALLDIR/lib/gopherbot_v1.sh
+
+# Name of the instance to build
+if [ -z "$DEVHOST" ]
+then
+    DEVHOST=$(GetSenderAttribute name)
+    # Export value for the rest of the pipeline
+    SetParameter DEVHOST $DEVHOST
+fi
+if [ -z "$DEVIMG" ]
+then
+    DEVIMG=amzn2devel
+    # Export value for the rest of the pipeline
+    SetParameter DEVIMG $DEVIMG
+fi
+
+# Don't queue if this build in progress, just exit
+if ! Exclusive $DEVHOST false
+then
+    Log Warn "Job already in progress, exiting"
+    exit 0
+fi
+
+# Stuff that happens "right now"
+mkdir -p $GOPHER_WORKSPACE/c9wks/$DEVHOST
+SetWorkingDirectory c9wks/$DEVHOST
+# The ansible-vault passphrase is stored in ansible:github.com/parsley42/aws-devel VAULT_PASSWORD=<foo>
+# Namespaces defined in repositories.yaml
+ExtendNamespace github.com/parsley42/aws-devel/master 21
+
+# Set up the pipeline; all tasks must be defined in gopherbot.yaml
+AddTask ssh-init
+AddTask ssh-scan bitbucket.org
+AddTask git-sync git@bitbucket.org:lnxjedi/linuxjedi-private.git master linuxjedi-private
+AddTask git-sync https://github.com/parsley42/aws-devel.git master aws-devel
+AddTask git-sync https://github.com/parsley42/aws-linuxjedi.git master aws-linuxjedi
+# The task that actuall builds the workstation
+AddTask build-c9wks
+</file_content file: floyd/jobs/c9wks.sh>
+<preamble file: floyd/jobs/githubci.sh>
+This job script is referenced in robot.yaml, and is executed by Gopherbot when the corresponding job runs.
+</preamble>
+<file_content file: floyd/jobs/githubci.sh>
+#!/bin/bash -e
+
+# githubci.sh - a Bash job triggered by github commits
+
+GITHUB_REPOSITORY=$1
+GITHUB_BRANCH=$2
+shift 2
+
+source $GOPHER_INSTALLDIR/lib/gopherbot_v1.sh
+
+Say "Hey! I see there's a new commit to '$GITHUB_REPOSITORY' in the '$GITHUB_BRANCH' branch. Gonna do something about that real soon!"
+</file_content file: floyd/jobs/githubci.sh>
+<preamble file: floyd/lib/gopher-ai.rb>
+Since the Gopherbot engine sets appropriate environment variables for Ruby and Python,
+ruby jobs and scripts can "require 'gopher-ai'". This library defines classes and methods
+for use by e.g. the "ai" plugin.
+</preamble>
+<file_content file: floyd/lib/gopher-ai.rb>
+require "openai"
+require 'json'
+require 'base64'
+require 'digest/sha1'
+
+class ConversationStatus
+  attr_accessor :valid, :error, :tokens, :in_progress
+  def initialize(valid, error, tokens, in_progress)
+    @valid = valid
+    @error = error
+    @tokens = tokens
+    @in_progress = in_progress
+  end
+end
+
+class OpenAI_API
+  attr_reader :status, :cfg
+
+  ShortTermMemoryPrefix = "ai-conversation"
+  ShortTermMemoryDebugPrefix = "ai-debug"
+  DefaultProfile = "default"
+  PartialLineLength = 42
+  ThinkingStrings = [ "pondering", "working", "thinking", "cogitating", "processing", "analyzing" ]
+
+  def initialize(bot,
+      direct:,
+      botalias:,
+      botname:
+    )
+    # For now, static profile
+    @profile = DefaultProfile
+    @direct = direct
+    @alias = botalias
+    @name = botname
+    @bot = direct ? bot : bot.Threaded
+    in_progress = false
+    if direct
+      @memory = ShortTermMemoryPrefix
+      exclusive = "#{ShortTermMemoryPrefix}:#{ENV["GOPHER_USER_ID"]}"
+    else
+      @memory = "#{ShortTermMemoryPrefix}:#{bot.thread_id}"
+      exclusive = "#{ShortTermMemoryPrefix}:#{bot.channel}:#{bot.thread_id}"
+    end
+    @exchanges = []
+    @tokens = 0
+    @valid = true
+    debug_memory = @bot.Recall(ShortTermMemoryDebugPrefix + ":" + bot.thread_id, true)
+    @debug = (debug_memory.length > 0)
+
+    error = nil
+    unless bot.Exclusive(exclusive, false)
+      verb = bot.RandomString(ThinkingStrings)
+      error = "(message not processed, AI still #{verb}; you can resend or edit after reply)"
+      @status = ConversationStatus.new(false, error, 0, false)
+      return
+    end
+    encoded_state = bot.Recall(@memory, true)
+    if encoded_state.length > 0
+      state = decode_state(encoded_state)
+      in_progress = true
+      @profile, @tokens, @owner, @exchanges = state.values_at("profile", "tokens", "owner", "exchanges")
+    else
+      @owner = ENV["GOPHER_USER"]
+    end
+    @cfg = bot.GetTaskConfig()
+    @settings = @cfg["Profiles"][@profile]
+    unless @settings
+      @profile = "default"
+      @settings = @cfg["Profiles"][@profile]
+      @bot.Log(:warn, "no settings found for profile #{@profile}, falling back to 'default'")
+    end
+    @system = @settings["system"]
+    @max_context = @settings["max_context"]
+
+    @org = ENV["OPENAI_ORGANIZATION_ID"]
+    token = ENV['OPENAI_KEY']
+    unless token and token.length > 0
+      @valid = false
+      botalias = @bot.GetBotAttribute("alias")
+      error = "Sorry, no OPENAI_KEY set"
+    end
+    if @valid
+      OpenAI.configure do |config|
+        config.access_token = token
+        if @org
+          config.organization_id = @org
+        end
+      end
+      @client = OpenAI::Client.new
+    end
+    @status = ConversationStatus.new(@valid, error, @tokens, in_progress)
+  end
+
+  def draw(prompt)
+    response = @client.images.generate(parameters: { prompt: prompt, size: "512x512" })
+    return response.dig("data", 0, "url")
+  end
+
+  def reset()
+    # Wipe the memory
+    @bot.Remember(@memory, "", true)
+    if !@direct
+      @bot.Unsubscribe()
+    end
+  end
+
+  def query(input)
+    input = "#{@bot.user} says: #{input}"
+    while true
+      messages, partial = build_messages(input)
+      parameters = @settings["params"]
+      parameters["user"] = Digest::SHA1.hexdigest(ENV["GOPHER_USER_ID"])
+      if @debug
+        @bot.Say("Query parameters: #{parameters.to_json}", :fixed)
+        @bot.Say("Chat (lines truncated):\n#{partial}", :fixed)
+      end
+      parameters[:messages] = messages
+      begin
+        response = @client.chat(parameters: parameters)
+      rescue => e
+        response = {"error" => {"message" => e.message}}
+      end
+      if response["error"]
+        message = response["error"]["message"]
+        if message.match?(/tokens/i)
+          @exchanges.shift
+          @bot.Log(:warn, "token error, dropping an exchange and re-trying")
+          next
+        end
+        @bot.SayThread("Sorry, there was an error - '#{message}'")
+        @bot.Log(:error, "connecting to openai: #{message}")
+        exit(0)
+      end
+      break
+    end
+    aitext = response["choices"][0]["message"]["content"].lstrip
+    if @debug
+      ## This monkey business is because .to_json was including
+      ## items removed with .delete(...). ?!?
+      rdata = {}
+      response.each_key do |key|
+        next if key == "choices"
+        rdata[key] = response[key]
+      end
+      @bot.Say("Response data: #{rdata.to_json}", :fixed)
+    end
+    usage = response["usage"]
+    @bot.Log(:debug, "usage: prompt #{usage["prompt_tokens"]}, completion #{usage["completion_tokens"]}, total #{usage["total_tokens"]}")
+    aitext.strip!
+    if input.length > 0
+      @exchanges << {
+        "human" => input,
+        "ai" => aitext
+      }
+    end
+    @tokens = usage["total_tokens"]
+    @bot.Remember(@memory, encode_state, true)
+    if ENV["GOPHER_PROTOCOL"] == "slack"
+      aitext = aitext.gsub(/```\w+\n/) { |language| "#{language[3..-2]}:\n```\n" }
+    end
+    return @bot, aitext
+  end
+
+  def build_messages(input)
+    messages = [
+      {
+        role: "system", content: @system
+      }
+    ]
+    partial = String.new
+    final = nil
+    if input.length > 0
+      final = {
+        role: "user", content: input
+      }
+    end
+    @exchanges.each do |exchange|
+      contents, partial_string = exchange_data(exchange)
+      messages += contents
+      partial += partial_string
+    end
+    if final
+      messages.append(final)
+      partial += "user: #{input}"
+    end
+    return messages, partial
+  end
+
+  def encode_state
+    state = {
+      "profile": @profile,
+      "tokens": @tokens,
+      "owner": @owner,
+      "exchanges": @exchanges
+    }
+    json = state.to_json
+    Base64.strict_encode64(json)
+  end
+
+  def decode_state(encoded_state)
+    json = Base64.strict_decode64(encoded_state)
+    JSON.parse(json)
+  end
+
+  ## Courtesy of OpenAI / Astro Boy
+  def truncate_line(str)
+    truncated_str = str.split("\n").first
+    if truncated_str.length > PartialLineLength
+      truncated_str = truncated_str[0..PartialLineLength-1] + " ..."
+    end
+    return truncated_str
+  end
+
+  def exchange_data(exchange)
+    contents = [
+      {
+        role: "user", content: exchange["human"]
+      },
+      {
+        role: "assistant", content: exchange["ai"]
+      }
+    ]
+    human_line = "user: #{exchange["human"]}"
+    ai_line = "assistant: #{exchange["ai"]}"
+    partial = "#{truncate_line(human_line)}\n#{truncate_line(ai_line)}\n"
+    return contents, partial
+  end
+end
+</file_content file: floyd/lib/gopher-ai.rb>
+<preamble file: floyd/plugins/ai.rb>
+This is the script for a plugin defined in robot.yaml
+</preamble>
+<file_content file: floyd/plugins/ai.rb>
+#!/usr/bin/ruby
+
+# load the Gopherbot ruby library and instantiate the bot
+require 'gopherbot_v1'
+bot = Robot.new()
+
+# Found it Floyd's /lib
+require 'gopher-ai'
+
+command = ARGV.shift()
+
+defaultConfig = <<'DEFCONFIG'
+---
+DEFCONFIG
+
+case command
+when "init"
+  exit(0)
+when "configure"
+  # puts(defaultConfig)
+  exit(0)
+end
+
+direct = (bot.channel == "")
+cmdmode = ENV["GOPHER_CMDMODE"]
+
+botalias = bot.GetBotAttribute("alias").attr
+botname = bot.GetBotAttribute("name").attr
+
+# When command mode = "alias", reproduce the logic of builtin-fallback
+if command == "catchall" and cmdmode == "alias"
+  if direct
+    bot.Say("Command not found; try your command in a channel, or use '#{botalias}help'")
+  else
+    bot.SayThread("No command matched in channel '#{ENV["GOPHER_CHANNEL"]}'; try '#{botalias}help'")
+  end
+  exit(0)
+end
+
+case command
+# For dedicated AI channels, use a MessageMatcher of .* and ChannelOnly: true
+when "ambient", "catchall", "subscribed"
+  ai = OpenAI_API.new(bot, direct: direct, botalias: botalias, botname: botname)
+  unless ai.status.valid
+    if ai.status.error
+      bot.ReplyThread(ai.status.error)
+    end
+    exit(0)
+  end
+  prompt = ARGV.shift()
+  cfg = ai.cfg
+  unless ai.status.in_progress
+    hold_messages = cfg["WaitMessages"]
+    hold_message = bot.RandomString(hold_messages)
+    bot.Subscribe()
+    bot.ReplyThread("(#{hold_message})")
+  else
+    bot.Say("(#{bot.RandomString(OpenAI_API::ThinkingStrings)})")
+  end
+  type = ai.status.in_progress ? "continuing" : "starting"
+  bot.Log(:debug, "#{type} AI conversation with #{ENV["GOPHER_USER"]} in #{ENV["GOPHER_CHANNEL"]}/#{ENV["GOPHER_THREAD_ID"]}")
+  aibot, reply = ai.query(prompt)
+  aibot.Say(reply)
+when "close"
+  ai = OpenAI_API.new(bot, direct: direct, botalias: botalias, botname: botname)
+  unless ai.status.valid
+    if ai.status.error
+      bot.ReplyThread(ai.status.error)
+    end
+    exit(0)
+  end
+  if ai.status.in_progress
+    if direct
+      bot.Say("Ok, I'll forget this conversation")
+    else
+      bot.Say("Ok, I'll forget this conversation and unsubscribe this thread")
+    end
+    ai.reset()
+  else
+    if direct or bot.threaded_message
+      bot.Say("I have no memory of a conversation in progress")
+    else
+      bot.Say("That command doesn't apply in this context")
+    end
+  end
+when "status"
+  if bot.threaded_message or direct
+    ai = OpenAI_API.new(bot, direct: direct, botalias: botalias, botname: botname)
+    if ai.status.valid
+      if ai.status.in_progress
+        bot.Reply("I hear you and remember an AI conversation totalling #{ai.status.tokens} tokens")
+      else
+        bot.Reply("I hear you, but I have no memory of a conversation in this thread; my short-term is only about half a day - you can start a new AI conversation by addressing me in the main channel")
+      end
+    else
+      bot.Reply(ai.status.error)
+    end
+  else
+    bot.Reply("I can hear you")
+  end
+when "image"
+  ai = OpenAI_API.new(bot, direct: direct, botalias: botalias, botname: botname)
+  unless ai.valid
+    bot.SayThread(ai.error)
+    exit(0)
+  end
+  cfg = ai.cfg
+  hold_messages = cfg["DrawMessages"]
+  hold_message = bot.RandomString(hold_messages)
+  bot.Say("(#{hold_message})")
+  url = ai.draw(ARGV.shift)
+  bot.Say(url)
+when "debug"
+  unless bot.threaded_message or direct
+    bot.SayThread("You can only initialize debugging in a conversation thread")
+    exit(0)
+  end
+  bot.Remember(OpenAI_API::ShortTermMemoryDebugPrefix + ":" + bot.thread_id, "true", true)
+  bot.SayThread("(ok, debugging output is enabled for this conversation)")
+end
+</file_content file: floyd/plugins/ai.rb>
+<preamble file: floyd/plugins/util.sh>
+This is the script for a plugin defined in robot.yaml
+</preamble>
+<file_content file: floyd/plugins/util.sh>
+#!/bin/bash -e
+
+# util.sh - shortcut plugin for a variety of actions
+
+source $GOPHER_INSTALLDIR/lib/gopherbot_v1.sh
+
+COMMAND=$1
+shift
+
+configure(){
+  cat <<"EOF"
+AllowDirect: true
+Help:
+- Keywords: [ "dinner" ]
+  Helptext: [ "(bot), dinner? - pick random dinner meals" ]
+CommandMatchers:
+- Command: "dinner"
+  Regex: "(?i:(what's for )?dinner\\??)"
+- Command: "moredinner"
+  Regex: "more dinner please"
+EOF
+}
+
+case "$COMMAND" in
+  "init")
+    if [ ! -e ".wokeup" ]
+    then
+      SendChannelMessage "ai" "Floyd here now!"
+      touch ".wokeup"
+    fi
+    ;;
+  "configure")
+    configure
+    ;;
+  "code")
+    Say "Ok, I'll start the 'cloud9wks' job and let you know when your workstation is ready..."
+    AddJob cloud9wks
+    AddTask notify $GOPHER_USER "Happy coding!"
+    FailTask notify $GOPHER_USER "Build failed, check history for the 'cloud9wks' job"
+    ;;
+  "wake")
+    Say "Ok, I'll see if I can rouse Bender and let you know when he's awake..."
+    AddJob bender
+    AddTask notify $GOPHER_USER "Bender is up, have at it!"
+    FailTask notify $GOPHER_USER "Couldn't wake Bender - check history for the 'bender' job"
+    ;;
+  "dinner")
+    AddCommand lists "pick a random item from the dinner meals list"
+    AddCommand util "more dinner please"
+    ;;
+  "moredinner")
+    if MORE=$(PromptForReply YesNo "Pick another?")
+    then
+      case $MORE in
+        y | Y | Yes | yes)
+          AddCommand lists "pick a random item from the dinner meals list"
+          AddCommand util "more dinner please"
+          ;;
+        *)
+          Say "Bon Apetit!"
+          ;;
+      esac
+    else
+      Say "Ok then, ttyl!"
+    fi
+esac
+</file_content file: floyd/plugins/util.sh>
+<preamble file: floyd/ssh/robot_rsa>
+This is an encrypted ssh private key. Pipelines where Floyd will need to use ssh or "git push"
+will decrypt this with the "ssh-init" task.
+</preamble>
+<file_content file: floyd/ssh/robot_rsa>
+-----BEGIN RSA PRIVATE KEY-----
+Proc-Type: 4,ENCRYPTED
+DEK-Info: AES-128-CBC,18A6287407595F286D276D6B577BCEA9
+
+B5Mt04vsaed1867Hxo+LSNMfXF1irtPXph2HYjwEmvGDuRNIRmBvJwS7rHW6Gf8a
+0yFKEosP6JlxPtuR6Gvb67D/q2zsN11xrESy8QsfYvXKZgrY3Lee+3/NfD+yrwda
+lUMEK7yKK2WKfQOSXGT1x3ydL9Ul9M22zjBD4+vKsnFTQFKVxjmX+CF9pI5qKHbX
+FJjHyTQp5JiF8m6iVxJy5xrx+3ODTWoKY+EjlZMC03XEaUCLm2vKxEV2np9WU479
+b2YsfIoSwgXrlWiFGJ8mo6+n69Vxe8d1Ld67kVStgRAlkwHhnPiZmUJR2dpShTig
+NZSm2WvBnirvWjfgurposZiYvvvBUKgQxyJThC+iNoNugc8CAoP0rgVOZel1Jme4
+CRB8OR+LdsLa9RDD9Ha0ouMWnLbRM43CQh4jUiSxR0gnc0eVZ8DdF9cFPIPjIqEL
+JgZWtWCZN8/nnnFXp8fpkO8QyjJsLktCD383+0P7BOCfGCxYXUwhsSQKFE7O2oUE
+hIQF5M6G0N6b7IW1BguicUbnFj9gX5gezu1Dd1BnhQasAArhYkC8KptmeY07tmYm
+I6vGPdmBmOCIntcWLwdt+11M6kel0Dfl4oEuc7fE4okfEg+dsnSLOcH8hRCaPNg2
+kDTyitjdo9Wucwf+hofVDCUo8plA6h8kj9uwEwZxS0amKDKWHOFy7uLvad6tuFiq
+UjPRfolUuz8fOsepJleJKR5p95yXOMyURazIsPAG8PvNnjmfOoxe4y02BKnSeceC
+KjYTqJJks0vm/ilFM8eq8tyscEVWfAsJ7fGfLEF9ooKEbQDjlTMh+mG/cxPhDQ1w
+z7CwnV2YaHOAusoaDLt7xQAHD5q4FjpEnhn8W2f3R1x2LaCqzeaM0sZqEnN1HYNP
+a+z0k9lYBh+DOAPhx5oz0c2XxQ9da7zLmRt3bdw0wodkzkIUePRxjzSCz0hChaI4
+0RIoDUS2sefmpfaJvHPyuRhYom7j/yCjfimSJdZzD0m53BOZ5RTrib2JHUBQIq4U
+f0DOmUnwIh41lIRZe51lqdnIEzZcdDtNNGxAP6NZi4lbQmomOZMyMm3rCHUmZEeo
+lCFO3dXpuFliUlYca9T8IBtrNGihmwSmM3TLeelHji5oeanDkqdR0AS2nIQBMMhe
+bHxBoIhOywYVPnkmX2bmeXzo0AJ8VZaGfd/kSwc+w7Mh0+pet8dMBmjqBzH4Ijd4
+ek13hTc5GrJfp9Qtul4q17qIoQjM/SryO4pj3n2uvH8TDadVDYTD96E6N49jDFHn
+3xBBy51YcrVDWPIf6xgAucPnoIN0XDYSi/RKF+gYgnbZOvLQByYcQfsOCRSib2b8
+KGpCGUDqTWwyYMLF4eyvb6FmubrWPH3YH0HQf5aQz3DyubUb86beIVjpRGtJ1z3l
+EBUEu5CFP5O9Qr84R8/POiImURRL60h7w+mBaWY2UbFST8HFjP8mT6lXXUFR84AX
+zbHRkMRoukU64jo6HbyD4FbKUGR/rPk9jj32botfuZg6Kaq88nhbhwrdndLBO0qj
+EYlRX1cw9b/6cDOes2wa6qO90ut4CeLu+FfnnMcYsy6Iyq1lAg7lHBO1eFpBbNwE
+-----END RSA PRIVATE KEY-----
+</file_content file: floyd/ssh/robot_rsa>
+<preamble file: floyd/ssh/robot_rsa.pub>
+(corresponding public key)
+</preamble>
+<file_content file: floyd/ssh/robot_rsa.pub>
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDVohQi50RJ4vOaIKYIQ5thA/HZyNTrnvuFWOSt7NGsoe4vSvIoBVKFSa157mq5KwJKgEcE9fizL7foae92jPDvu5V+22iyz0l8k7GAOOVOllLJJ4N/LLQ4ExlHCqkzAYxXWy9+xrtE8tEI8XSyJKBwjSXOiMePG/3X5XdoVSf0g3diYGtrEDoNwcNPNis42/EhgTIfQB/P05oLWjryEfWBR5aJ/qYyXevgHbkenl7cC751f2sh3gPbjh8LDtPbdLED7nHwYOINkVyTurcOHTeL9ECMY7HKh6lJ4A1fQG/RuEMdQ/tPSghQke4kKIrjy8fF4JvWXPygJtIGYipPtHbF floyd@floyd.linuxjedi.org
+</file_content file: floyd/ssh/robot_rsa.pub>
+<preamble file: floyd/tasks/build-c9wks.sh>
+This is the script for a task defined in robot.yaml
+</preamble>
+<file_content file: floyd/tasks/build-c9wks.sh>
+#!/bin/bash
+
+# build-c9wks.sh - task for launching and configuring a Cloud9 workstation
+
+source $GOPHER_INSTALLDIR/lib/gopherbot_v1.sh
+
+ACTION=$1
+
+case "$ACTION" in
+"launch")
+    ec2 create -w $DEVHOST $KEYNAME $DEVIMG
+    ;;
+"configure")
+    AddTask ansible-playbook c9devel.yaml -e target=$DEVHOST
+    ;;
+*)
+    SetWorkingDirectory c9wks/$DEVHOST/aws-devel
+    AddTask build-c9wks launch
+    AddTask build-c9wks configure
+    ;;
+esac
+</file_content file: floyd/tasks/build-c9wks.sh>
+<preamble file: floyd/tasks/wake-bender.sh>
+This is the script for a task defined in robot.yaml
+</preamble>
+<file_content file: floyd/tasks/wake-bender.sh>
+#!/bin/bash
+
+# wake-bender.sh - task for launching and configuring a Gopherbot dev instance
+
+source $GOPHER_INSTALLDIR/lib/gopherbot_v1.sh
+
+ACTION=$1
+
+case "$ACTION" in
+"launch")
+    ec2 create -w bender $KEYNAME gopherdev
+    ;;
+"configure")
+    mkdir -p roles
+    ansible-galaxy install -r requirements.yaml
+    AddTask ansible-playbook deploy.yaml -e target=bender
+    ;;
+*)
+    SetWorkingDirectory bender/deploy-gopherbot
+    AddTask wake-bender launch
+    AddTask wake-bender configure
+    ;;
+esac
+</file_content file: floyd/tasks/wake-bender.sh>
+<preamble file: floyd/terraform/.terraform.lock.hcl>
+(terraform metadata for deploying floyd)
+</preamble>
+<file_content file: floyd/terraform/.terraform.lock.hcl>
+# This file is maintained automatically by "terraform init".
+# Manual edits may be lost in future updates.
+
+provider "registry.terraform.io/hashicorp/aws" {
+  version     = "4.62.0"
+  constraints = "~> 4.0"
+  hashes = [
+    "h1:W9SNPJwklBwrSNCdY8MHET9yFJlM5vVSxb7szD5pzFk=",
+    "zh:12059dc2b639797b9facb6397ac6aec563891634be8e5aadf3a457590c1147d4",
+    "zh:1b3515d70b6998359d0a6d3b3c287940ab2e5c59cd02f95c7d9dab7df76e86b6",
+    "zh:423a1d3afdb6b625f2e3b06770ef4324740d400ff1a0d6d566c87d3f841d74fc",
+    "zh:58612b5a27d929dd1dff04d18d840b9cc59d45fed06247f0c2f87c1e5d3257d9",
+    "zh:5b243cd2250dd097293e06c1cc85e805565194e53f594ccd070252c7af644f54",
+    "zh:61ad9739e7d6fca8fddef269cb2ba7285f0632f5f27660755662550e1f69e4bb",
+    "zh:6700d86f5bfcae8491c87a7769b211a079dbf6dfb325bde76bf407aca3e76ff4",
+    "zh:67c7925f3b7ac1988c2aee8965b1f6f04738984cf8ae302b88215549793d14c1",
+    "zh:686770264b907b3e4c75fd751f8ea717a7e393d2fbde0950c4703fa809e573f0",
+    "zh:740236fda351a8f4976ddbd37e543c8d746a409e3a6aa290a8c5ff774b264455",
+    "zh:88ace13281a344044624ed088125c30f1a803188bf95874d09ca7e95725d5727",
+    "zh:9b12af85486a96aedd8d7984b0ff811a4b42e3d88dad1a3fb4c0b580d04fa425",
+    "zh:a4810a034f5def017607b0b079c7867c983da653928bd9f67edbc18575c0b629",
+    "zh:e1c10e1641b5f17fec61910d6c3514e241f650ced84523f09cb16271a9a1e651",
+    "zh:f63593ee2e01a2e1096ae9959fa43f0521114b3335f6440170f0d35d1969e8a2",
+  ]
+}
+</file_content file: floyd/terraform/.terraform.lock.hcl>
+<preamble file: floyd/terraform/aws-sso-session>
+(utility script used when deploying floyd but otherwise unrelated)
+</preamble>
+<file_content file: floyd/terraform/aws-sso-session>
+#!/bin/bash -e
+
+# aws-sso-session
+# Sets up aws configuration from temporary credentials provided by SSO.
+
+usage(){
+  cat >&2 <<EOF
+Usage:
+# These values should be pasted in from AWS SSO web app.
+$ AWS_ACCESS_KEY_ID=<redacted>
+$ AWS_SECRET_ACCESS_KEY=<redacted>
+$ AWS_SESSION_TOKEN=<redacted>
+$ eval \`aws-sso-session [-r <region>] [-p <profile>]\`
+EOF
+  exit 1
+}
+
+PROFILE="default"
+
+while getopts ":ir:p:" OPT; do
+    case $OPT in
+    r )
+        SET_REGION=$OPTARG
+        ;;
+    p )
+        PROFILE=$OPTARG
+        ;;
+    \? | h)
+        [ "$OPT" != "h" ] && echo "Invalid option: $OPTARG" >&2
+        usage
+        exit 1
+        ;;
+    esac
+done
+shift $((OPTIND -1))
+
+if [ ! "$AWS_ACCESS_KEY_ID" ]
+then
+    echo "ERROR: You need to manually set AWS_* vars for import" >&2
+    usage
+fi
+echo "Updating $PROFILE AWS credentials..." >&2
+aws --profile $PROFILE configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+aws --profile $PROFILE configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+aws --profile $PROFILE configure set aws_session_token $AWS_SESSION_TOKEN
+if [ "$SET_REGION" ]
+then
+  aws --profile $PROFILE configure set region $SET_REGION
+fi
+
+echo unset AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN
+
+echo "AWS session credentials updated." >&2
+</file_content file: floyd/terraform/aws-sso-session>
+<preamble file: floyd/terraform/bootstrap.tpl>
+terraform template for the userdata script that bootstraps floyd on an ec2 instance
+</preamble>
+<file_content file: floyd/terraform/bootstrap.tpl>
+#!/bin/bash
+
+# bootstrap.sh - Turn an Amazon Linux 2023 instance in to a Gopherbot host
+echo "Running $0 ..."
+
+# Uses precious RAM, not useful
+echo "Disabling sssd (unused) ..."
+systemctl stop sssd
+systemctl disable sssd
+
+echo "Setting up swap file (${swap_file_size}) ..."
+# Create a swap file
+fallocate -l ${swap_file_size} /swapfile
+chmod 600 /swapfile
+mkswap /swapfile
+
+# Enable the swap file across reboots
+echo '/swapfile swap swap defaults 0 0' | tee -a /etc/fstab > /dev/null
+swapon -a
+
+yum -y upgrade
+yum -y install jq git ruby python3-pip iptables
+
+echo "Getting secrets from SSM"
+GOPHER_ENCRYPTION_KEY=$(aws ssm get-parameter --name "/robots/${bot_name}/encryption_key" --with-decryption --output text --query Parameter.Value)
+GOPHER_DEPLOY_KEY=$(aws ssm get-parameter --name "/robots/${bot_name}/deploy_key" --with-decryption --output text --query Parameter.Value)
+WG_PRIVATE=$(aws ssm get-parameter --name "/robots/${bot_name}/wg_key" --with-decryption --output text --query Parameter.Value)
+
+echo "Installing WireGuard Tools"
+# Install WireGuard tools from Rocky Linux; kernel module already present
+ROCKY_LINUX_PREFIX="https://download.rockylinux.org/pub/rocky/9/devel/x86_64/os/Packages/w"
+WG_RPM_VERSION=$(curl -s $ROCKY_LINUX_PREFIX/ | grep -oP '(?<=href="wireguard-tools).*(?=">)')
+rpm --import https://dl.rockylinux.org/pub/rocky/RPM-GPG-KEY-Rocky-9
+rpm -i $ROCKY_LINUX_PREFIX/wireguard-tools$WG_RPM_VERSION
+systemctl enable wg-quick@wg0.service
+
+echo "Configuring WireGuard"
+cat > /etc/wireguard/wg0.conf << EOF
+[Interface]
+Address = ${vpn_cidr}
+PrivateKey = $WG_PRIVATE
+ListenPort = 51820
+PostUp = /etc/wireguard/start-nat.sh
+PostDown = /etc/wireguard/stop-nat.sh
+EOF
+
+cat > /etc/wireguard/start-nat.sh << 'EOF'
+#!/bin/bash
+echo 1 > /proc/sys/net/ipv4/ip_forward
+ETHERNET_INT=$(ip -brief link show | awk '$1 ~ /^e/ {print $1; exit}')
+/sbin/iptables -t nat -I POSTROUTING 1 -s ${vpn_cidr} -o $ETHERNET_INT -j MASQUERADE
+/sbin/iptables -I INPUT 1 -i wg0 -j ACCEPT
+/sbin/iptables -I FORWARD 1 -i $ETHERNET_INT -o wg0 -j ACCEPT
+/sbin/iptables -I FORWARD 1 -i wg0 -o $ETHERNET_INT -j ACCEPT
+/sbin/iptables -I INPUT 1 -i $ETHERNET_INT -p udp --dport 51820 -j ACCEPT
+EOF
+
+cat > /etc/wireguard/stop-nat.sh << 'EOF'
+#!/bin/bash
+echo 0 > /proc/sys/net/ipv4/ip_forward
+ETHERNET_INT=$(ip -brief link show | awk '$1 ~ /^e/ {print $1; exit}')
+/sbin/iptables -t nat -D POSTROUTING -s ${vpn_cidr} -o $ETHERNET_INT -j MASQUERADE
+/sbin/iptables -D INPUT -i wg0 -j ACCEPT
+/sbin/iptables -D FORWARD -i $ETHERNET_INT -o wg0 -j ACCEPT
+/sbin/iptables -D FORWARD -i wg0 -o $ETHERNET_INT -j ACCEPT
+/sbin/iptables -D INPUT -i $ETHERNET_INT -p udp --dport 51820 -j ACCEPT
+EOF
+
+chmod +x /etc/wireguard/*-nat.sh
+
+systemctl start wg-quick@wg0
+
+# Install latest Gopherbot
+echo "Installing Gopherbot ..."
+GBDL=/root/gopherbot.tar.gz
+GB_LATEST=$(curl --silent https://api.github.com/repos/lnxjedi/gopherbot/releases/latest | jq -r .tag_name)
+curl -s -L -o $GBDL https://github.com/lnxjedi/gopherbot/releases/download/$GB_LATEST/gopherbot-linux-amd64.tar.gz
+cd /opt
+tar xzf $GBDL
+rm $GBDL
+
+mkdir -p /var/lib/robots
+useradd -d /var/lib/robots/${bot_name} -r -m -c "${bot_name} gopherbot" ${bot_name}
+cat > /var/lib/robots/${bot_name}/.env << EOF
+GOPHER_CUSTOM_REPOSITORY=${bot_repo}
+GOPHER_DEPLOY_KEY=$GOPHER_DEPLOY_KEY
+GOPHER_ENCRYPTION_KEY=$GOPHER_ENCRYPTION_KEY
+GOPHER_PROTOCOL=${protocol}
+EOF
+chown ${bot_name}:${bot_name} /var/lib/robots/${bot_name}/.env
+chmod 0600 /var/lib/robots/${bot_name}/.env
+cat > /etc/systemd/system/${bot_name}.service <<EOF
+[Unit]
+Description=${bot_name} - Gopherbot DevOps Chatbot
+Documentation=https://lnxjedi.github.io/gopherbot
+After=syslog.target
+After=network.target
+
+[Service]
+Type=simple
+User=${bot_name}
+Group=${bot_name}
+WorkingDirectory=/var/lib/robots/${bot_name}
+ExecStart=/opt/gopherbot/gopherbot -plainlog
+Restart=on-failure
+Environment=HOSTNAME=%H
+
+KillMode=process
+## Give the robot plenty of time to finish plugins currently executing;
+## no new plugins will start after SIGTERM is caught.
+TimeoutStopSec=600
+
+[Install]
+WantedBy=default.target
+EOF
+
+cat > /etc/sudoers.d/${bot_name}-user << EOF
+# User rules for robot
+${bot_name} ALL=(ALL) NOPASSWD:ALL
+EOF
+
+systemctl daemon-reload
+systemctl enable ${bot_name}
+
+echo "Starting the robot (${bot_name}) ..."
+systemctl start ${bot_name}
+</file_content file: floyd/terraform/bootstrap.tpl>
+<preamble file: floyd/terraform/bot-ec2.tf>
+terraform file for floyd's ec2 instance
+</preamble>
+<file_content file: floyd/terraform/bot-ec2.tf>
+data "aws_ami" "amazon-linux-2023" {
+  most_recent = true
+  owners      = ["amazon"]
+
+  filter {
+    name   = "name"
+    values = ["al2023-ami-20*-x86_64"]
+  }
+}
+
+locals {
+  # Define the bootstrap script as a local variable
+  bootstrap_script = templatefile("${path.module}/bootstrap.tpl", {
+    bot_name       = var.robot-name
+    vpn_cidr       = var.vpn-cidr
+    swap_file_size = var.swap-file-size
+    wg_private     = var.wg-key
+    bot_repo       = var.repository
+    protocol       = var.protocol
+    bot_key        = var.encryption-key
+    deploy_key     = var.deploy-key
+  })
+}
+
+resource "aws_launch_template" "bot-template" {
+  name                                 = "${var.robot-name}_template"
+  image_id                             = data.aws_ami.amazon-linux-2023.id
+  instance_initiated_shutdown_behavior = "terminate"
+  instance_type                        = var.instance-type
+  update_default_version               = true
+
+  user_data = base64encode(local.bootstrap_script)
+
+  iam_instance_profile {
+    name = aws_iam_instance_profile.bot_profile.name
+  }
+  monitoring {
+    enabled = false
+  }
+  network_interfaces {
+    associate_public_ip_address = true
+    security_groups             = [aws_security_group.bot-sg.id]
+  }
+}
+
+resource "aws_autoscaling_group" "immortal-bot" {
+  desired_capacity    = 1
+  max_size            = 1
+  min_size            = 1
+  vpc_zone_identifier = data.aws_subnets.bot-subnets.ids
+  # Allow the robot to find out who it is by introspection
+  tag {
+    key                 = "robot-name"
+    value               = var.robot-name
+    propagate_at_launch = true
+  }
+  tag {
+    key                 = "Name"
+    value               = "${var.robot-name}-robot"
+    propagate_at_launch = true
+  }
+  launch_template {
+    name = aws_launch_template.bot-template.name
+  }
+}
+</file_content file: floyd/terraform/bot-ec2.tf>
+<preamble file: floyd/terraform/brain.tf>
+terraform file for floyd's brain stored in dynamodb
+</preamble>
+<file_content file: floyd/terraform/brain.tf>
+resource "aws_dynamodb_table" "robot-brain" {
+  name           = "${var.robot-name}-brain"
+  billing_mode   = "PROVISIONED"
+  # Note: AWS free tier includes 25GB + 25 read and 25 write units
+  read_capacity  = 5
+  write_capacity = 5
+  hash_key       = "Memory"
+
+  attribute {
+    name = "Memory"
+    type = "S"
+  }
+}
+</file_content file: floyd/terraform/brain.tf>
+<preamble file: floyd/terraform/instance-profile.tf>
+the instance profile for floyd's ec2 instance
+</preamble>
+<file_content file: floyd/terraform/instance-profile.tf>
+data "aws_region" "current" {}
+
+data "aws_caller_identity" "current" {}
+
+resource "aws_iam_instance_profile" "bot_profile" {
+  name = "${var.robot-name}_bot_profile"
+  role = aws_iam_role.bot_role.name
+}
+
+resource "aws_iam_role" "bot_role" {
+  name = "${var.robot-name}_bot_role"
+  path = "/"
+
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "ec2.amazonaws.com"
+      },
+      "Effect": "Allow",
+      "Sid": ""
+    }
+  ]
+}
+EOF
+  managed_policy_arns = [
+    "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore",
+    "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy",
+    "arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess",
+  ]
+  inline_policy {
+    name = "param-access-policy"
+    policy = jsonencode({
+      Version = "2012-10-17"
+      Statement = [
+        {
+          Effect   = "Allow",
+          Action   = ["ssm:DescribeParameters"]
+          Resource = "*"
+        },
+        {
+          Effect = "Allow"
+          Action = [
+            "ssm:GetParameters",
+            "ssm:GetParametersByPath"
+          ]
+          Resource = [
+            "arn:aws:ssm:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:parameter/robots/${var.robot-name}/*"
+          ]
+        }
+      ]
+    })
+  }
+  inline_policy {
+    name = "bot-brain-access"
+    policy = jsonencode({
+      Version = "2012-10-17"
+      Statement = [
+        {
+          "Effect" : "Allow",
+          "Action" : [
+            "dynamodb:PutItem",
+            "dynamodb:Scan",
+            "dynamodb:DescribeTable",
+            "dynamodb:GetItem",
+            "dynamodb:DeleteItem"
+          ],
+          "Resource" : "${aws_dynamodb_table.robot-brain.arn}"
+        }
+      ]
+    })
+  }
+}
+</file_content file: floyd/terraform/instance-profile.tf>
+<preamble file: floyd/terraform/metadata.tf>
+terraform file
+</preamble>
+<file_content file: floyd/terraform/metadata.tf>
+provider "aws" {
+  default_tags {
+    tags = {
+      Provisioner = "Terraform"
+      Repository = "floyd-gopherbot"
+    }
+  }
+}
+
+terraform {
+  backend "local" {
+    path = "floyd.tfstate"
+  }
+
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 4.0"
+    }
+  }
+
+  required_version = ">= 1.3.0"
+}
+</file_content file: floyd/terraform/metadata.tf>
+<preamble file: floyd/terraform/network.tf>
+terraform file to configure networking for floyd
+</preamble>
+<file_content file: floyd/terraform/network.tf>
+data "aws_vpc" "bot-vpc" {
+  filter {
+    name = "tag-value"
+    values = ["${var.vpc-name}"]
+  }
+  filter {
+    name = "tag-key"
+    values = ["Name"]
+  }
+}
+
+data "aws_subnets" "bot-subnets" {
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.bot-vpc.id]
+  }
+    filter {
+    name   = "tag:Name"
+    values = ["Management DMZ Subnet*"]
+  }
+}
+
+resource "aws_security_group" "bot-sg" {
+  name        = "${var.robot-name}-allow-wireguard"
+  description = "Allows the robot to provide WireGuard VPN server services"
+  vpc_id      = data.aws_vpc.bot-vpc.id
+
+  ingress {
+    description      = "WireGuard UDP"
+    from_port        = 51820
+    to_port          = 51820
+    protocol         = "udp"
+    cidr_blocks      = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port        = 0
+    to_port          = 0
+    protocol         = "-1"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
+  }
+
+  tags = {
+    Name = "allow_wireguard"
+  }
+}
+</file_content file: floyd/terraform/network.tf>
+<preamble file: floyd/terraform/ssm-params.tf>
+terraform file for the ssm parameters used when bootstrapping floyd
+</preamble>
+<file_content file: floyd/terraform/ssm-params.tf>
+locals {
+  bot-prefix = "/robots/${var.robot-name}"
+}
+
+resource "aws_ssm_parameter" "encryption-key" {
+  name        = "${local.bot-prefix}/encryption_key"
+  description = "The robot's brain encryption key"
+  type        = "SecureString"
+  value       = var.encryption-key
+}
+
+resource "aws_ssm_parameter" "deploy-key" {
+  name        = "${local.bot-prefix}/deploy_key"
+  description = "The robot's read-only ssh deploy key"
+  type        = "String"
+  value       = var.deploy-key
+}
+
+resource "aws_ssm_parameter" "wg-key" {
+  name        = "${local.bot-prefix}/wg_key"
+  description = "The robot's private wireguard key"
+  type        = "SecureString"
+  value       = var.wg-key
+}
+</file_content file: floyd/terraform/ssm-params.tf>
+<preamble file: floyd/terraform/terraform.tfvars>
+non-sensitive data used by terraform when bootstrapping floyd
+</preamble>
+<file_content file: floyd/terraform/terraform.tfvars>
+# This file contains only non-sensitive information and
+# can be safely stored in git.
+robot-name = "floyd"
+repository = "git@github.com:parsley42/floyd-gopherbot.git"
+protocol = "slack"
+instance-type = "t3a.nano"
+vpc-name = "Management VPC"
+vpn-cidr = "10.77.0.1/24"
+</file_content file: floyd/terraform/terraform.tfvars>
+<preamble file: floyd/terraform/variables.tf>
+all the terraform variables needed for floyd
+</preamble>
+<file_content file: floyd/terraform/variables.tf>
+# These should be definted in <robot-name>.auto.tfvars
+variable "encryption-key" {
+  type        = string
+  description = "The robot's brain encryption key, should be in <bot-name>.auto.tfvars file"
+}
+
+variable "deploy-key" {
+  type        = string
+  description = "The robot's read-only ssh deployment private key"
+}
+
+variable "wg-key" {
+  type        = string
+  description = "The robot's private wireguard key"
+}
+
+# The rest are non-sensitive and can go in terraform.tfvars
+variable "robot-name" {
+  type        = string
+  description = "The robot's name, required for provisioning multiple"
+  default     = "gopherbot"
+}
+
+variable "repository" {
+  type        = string
+  description = "The robot's configuration repository"
+}
+
+variable "protocol" {
+  type        = string
+  description = "The chat connection protocol to use, only 'slack' currently supported"
+  default     = "slack"
+}
+
+variable "instance-type" {
+  type        = string
+  description = "The AWS instance type to launch"
+  default     = "t3.micro"
+}
+
+variable "swap-file-size" {
+  type        = string
+  description = "Size of swap file to create"
+  default     = "420M"
+}
+
+variable "vpc-name" {
+  type        = string
+  description = "The name of the vpc where the instance should launch"
+  default     = ""
+}
+
+variable "vpn-cidr" {
+  type        = string
+  description = "The name of the vpc where the instance should launch"
+  default     = ""
+}
+
+variable "tags" {
+  default     = {}
+  description = "Instance tags"
+  type        = map(string)
+}
+</file_content file: floyd/terraform/variables.tf>

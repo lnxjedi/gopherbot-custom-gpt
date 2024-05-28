@@ -1,0 +1,1780 @@
+# concatenation of lib/ - all the files from lib/
+# have been included in this single file, each preceded by a
+# descriptive preamble that includes the filename in the opening
+# tag. These files come from the Gopherbot main git repository,
+# and are meant to be used by user-supplied extensions.
+<preamble file: lib/README.txt>
+README for the library directory
+</preamble>
+<file_content file: lib/README.txt>
+This directory is for language-specific libraries for writing plugins.
+</file_content file: lib/README.txt>
+<preamble file: lib/gopherbot_v1.py>
+Python library for Gopherbot extensions written in Python v2
+</preamble>
+<file_content file: lib/gopherbot_v1.py>
+import os
+import json
+import random
+import subprocess
+import sys
+import time
+import urllib2
+
+# python 2 version
+
+class Attribute:
+    "A Gopherbot Attribute return object"
+    def __init__(self, ret):
+        self.attr = ret["Attribute"]
+        self.ret = ret["RetVal"]
+
+    def __str__(self):
+        return self.attr
+
+class Reply:
+    "A Gopherbot Reply return object"
+    def __init__(self, ret):
+        self.reply = ret["Reply"]
+        self.ret = ret["RetVal"]
+
+    def __str__(self):
+        return self.reply
+
+class Memory:
+    "A Gopherbot long-term memory object"
+    def __init__(self, key, ret):
+        self.key = key
+        self.lock_token = ret["LockToken"]
+        self.exists = ret["Exists"]
+        self.datum = ret["Datum"]
+        self.ret = ret["RetVal"]
+
+class Robot:
+    "Instantiate a robot object for use with Gopherbot"
+
+    # Return values for robot method calls
+    Ok = 0
+    UserNotFound = 1
+    ChannelNotFound = 2
+    AttributeNotFound = 3
+    FailedMessageSend = 4
+    FailedChannelJoin = 5
+    DatumNotFound = 6
+    DatumLockExpired = 7
+    DataFormatError = 8
+    BrainFailed = 9
+    InvalidDatumKey = 10
+    InvalidDblPtr = 11
+    InvalidCfgStruct = 12
+    NoConfigFound = 13
+    RetryPrompt = 14
+    ReplyNotMatched = 15
+    UseDefaultValue = 16
+    TimeoutExpired = 17
+    Interrupted = 18
+    MatcherNotFound = 19
+    NoUserEmail = 20
+    NoBotEmail = 21
+    MailError = 22
+    TaskNotFound = 23
+    MissingArguments = 24
+    InvalidStage = 25
+
+    # Plugin return values / exit codes
+    Normal = 0
+    Fail = 1
+    MechanismFail = 2
+    ConfigurationError = 3
+    NotFound = 6
+    Success = 7
+
+    def __init__(self):
+        random.seed()
+        self.channel = os.getenv("GOPHER_CHANNEL")
+        self.thread_id = os.getenv("GOPHER_THREAD_ID")
+        self.threaded_message = os.getenv("GOPHER_THREADED_MESSAGE")
+        self.user = os.getenv("GOPHER_USER")
+        self.plugin_id = os.getenv("GOPHER_CALLER_ID")
+        self.format = ""
+        self.protocol = os.getenv("GOPHER_PROTOCOL")
+
+    def Call(self, func_name, func_args, format=""):
+        if len(format) == 0:
+            format = self.format
+        func_call = { "FuncName": func_name, "Format": format,
+                    "CallerID": self.plugin_id,
+                    "FuncArgs": func_args }
+        func_json = json.dumps(func_call)
+        req = urllib2.Request(url="%s/json" % os.getenv("GOPHER_HTTP_POST"),
+            data=func_json)
+        req.add_header('Content-Type', 'application/json')
+        # sys.stderr.write("Sending: %s\n" % func_json)
+        f = urllib2.urlopen(req)
+        body = f.read()
+        # sys.stderr.write("Got back: %s\n" % body)
+        return json.loads(body)
+
+    def CheckAdmin(self):
+        return self.Call(sys._getframe().f_code.co_name, {})["Boolean"]
+
+    def Subscribe(self):
+        return self.Call(sys._getframe().f_code.co_name, {})["Boolean"]
+
+    def Unsubscribe(self):
+        return self.Call(sys._getframe().f_code.co_name, {})["Boolean"]
+
+    def Elevate(self, immediate=False):
+        return self.Call(sys._getframe().f_code.co_name, { "Immediate": immediate })["Boolean"]
+
+    def Pause(self, s):
+        time.sleep(s)
+
+    def RandomString(self, sa):
+        return sa[random.randint(0, (len(sa)-1))]
+
+    def GetTaskConfig(self):
+        return self.Call(sys._getframe().f_code.co_name, {})
+
+    def CheckoutDatum(self, key, rw):
+        ret = self.Call(sys._getframe().f_code.co_name, { "Key": key, "RW": rw })
+        return Memory(key, ret)
+
+    def SpawnJob(self, name, args):
+        return self.Call(sys._getframe().f_code.co_name, { "Name": name, "CmdArgs": args })["RetVal"]
+
+    def AddJob(self, name, args):
+        return self.Call(sys._getframe().f_code.co_name, { "Name": name, "CmdArgs": args })["RetVal"]
+
+    def AddTask(self, name, args):
+        return self.Call(sys._getframe().f_code.co_name, { "Name": name, "CmdArgs": args })["RetVal"]
+
+    def FinalTask(self, name, args):
+        return self.Call(sys._getframe().f_code.co_name, { "Name": name, "CmdArgs": args })["RetVal"]
+
+    def FailTask(self, name, args):
+        return self.Call(sys._getframe().f_code.co_name, { "Name": name, "CmdArgs": args })["RetVal"]
+
+    def AddCommand(self, plugin, cmd):
+        return self.Call(sys._getframe().f_code.co_name, { "Plugin": plugin, "Command": cmd })["RetVal"]
+
+    def FinalCommand(self, plugin, cmd):
+        return self.Call(sys._getframe().f_code.co_name, { "Plugin": plugin, "Command": cmd })["RetVal"]
+
+    def FailCommand(self, plugin, cmd):
+        return self.Call(sys._getframe().f_code.co_name, { "Plugin": plugin, "Command": cmd })["RetVal"]
+
+    def SetParameter(self, name, value):
+        return self.Call(sys._getframe().f_code.co_name, { "Name": name, "Value": value })["Boolean"]
+
+    def Exclusive(self, tag, queue_task=False):
+        return self.Call(sys._getframe().f_code.co_name, { "Tag": tag, "QueueTask": queue_task })["Boolean"]
+
+    def ExtendNamespace(self, ns, hist):
+        return self.Call(sys._getframe().f_code.co_name, { "Extend": ns, "Histories": hist })["Boolean"]
+
+    def SetWorkingDirectory(self, path):
+        return self.Call(sys._getframe().f_code.co_name, { "Path": path })["Boolean"]
+
+    def GetRepoData(self):
+        return self.Call(sys._getframe().f_code.co_name, {})
+
+    def Log(self, level, msg):
+        self.Call(sys._getframe().f_code.co_name, { "Level": level, "Message": msg })
+
+    def CheckinDatum(self, m):
+        self.Call(sys._getframe().f_code.co_name, { "Key": m.key, "Token": m.lock_token })
+
+    def UpdateDatum(self, m):
+        ret = self.Call(sys._getframe().f_code.co_name, { "Key": m.key, "Token": m.lock_token,
+        "Datum": m.datum })
+        return ret["RetVal"]
+
+    def GetSenderAttribute(self, attr):
+        ret = self.Call(sys._getframe().f_code.co_name, { "Attribute": attr })
+        return Attribute(ret)
+
+    def GetUserAttribute(self, user, attr):
+        ret = self.Call(sys._getframe().f_code.co_name, { "User": user, "Attribute": attr })
+        return Attribute(ret)
+
+    def GetBotAttribute(self, attr):
+        ret = self.Call(sys._getframe().f_code.co_name, { "Attribute": attr })
+        return Attribute(ret)
+
+    def Remember(k, v, shared=False):
+        funcname = "RememberThread" if self.threaded_message else "Remember"
+        ret = self.Call(funcname, { "Key": k, "Value": v, "Shared": shared })
+        return ret["RetVal"]
+
+    def RememberContext(k, v):
+        return self.Remember("context:"+k, v, False)
+
+    def RememberThread(k, v, shared=False):
+        ret = self.Call(sys._getframe().f_code.co_name, { "Key": k, "Value": v, "Shared": shared })
+        return ret["RetVal"]
+
+    def RememberContextThread(k, v):
+        return self.RememberThread("context:"+k, v, False)
+
+    def Recall(self, memory, shared=False):
+        ret = self.Call(sys._getframe().f_code.co_name, { "Key": memory, "Shared": shared })
+        return ret["StrVal"]
+
+    def PromptForReply(self, regex_id, prompt, format=""):
+        thread = ""
+        if self.threaded_message:
+            thread = self.thread_id
+        return self.PromptUserChannelThreadForReply(regex_id, self.user, self.channel, thread, prompt, format)
+
+    def PromptThreadForReply(self, regex_id, prompt, format=""):
+        return self.PromptUserChannelThreadForReply(regex_id, self.user, self.channel, self.thread_id, prompt, format)
+
+    def PromptUserForReply(self, regex_id, user, prompt, format=""):
+        return self.PromptUserChannelThreadForReply(regex_id, user, "", prompt, format)
+
+    def PromptUserChannelThreadForReply(self, regex_id, user, channel, thread, prompt, format=""):
+        for i in range(0, 3):
+            rep = self.Call(sys._getframe().f_code.co_name, { "RegexID": regex_id, "User": user, "Channel": channel, "Thread": thread, "Prompt": prompt }, format)
+            if rep["RetVal"] == self.RetryPrompt:
+                continue
+            return Reply(rep)
+        if rep["RetVal"] == self.RetryPrompt:
+            rep["RetVal"] = self.Interrupted
+        return Reply(rep)
+
+    def SendChannelMessage(self, channel, message, format=""):
+        return self.SendChannelThreadMessage(channel, "", message, format)
+
+    def SendChannelThreadMessage(self, channel, thread, message, format=""):
+        ret = self.Call(sys._getframe().f_code.co_name, { "Channel": channel, "Thread": thread,
+        "Message": message }, format)
+        return ret["RetVal"]
+
+    def SendUserMessage(self, user, message, format=""):
+        ret = self.Call(sys._getframe().f_code.co_name, { "User": user,
+        "Message": message }, format)
+        return ret["RetVal"]
+
+    def SendUserChannelMessage(self, user, channel, message, format=""):
+        return self.SendUserChannelThreadMessage(user, channel, "", message, format)
+
+    def SendUserChannelThreadMessage(self, user, channel, thread, message, format=""):
+        ret = self.Call(sys._getframe().f_code.co_name, { "User": user,
+        "Channel": channel, "Thread": thread, "Message": message }, format)
+        return ret["RetVal"]
+
+    def Say(self, message, format=""):
+        if self.channel == '':
+            return self.SendUserMessage(self.user, message, format)
+        else:
+            thread = ""
+            if self.threaded_message:
+                thread = self.thread_id
+            return self.SendChannelThreadMessage(self.channel, thread, message, format)
+
+    def SayThread(self, message, format=""):
+        if self.channel == '':
+            return self.SendUserMessage(self.user, message, format)
+        else:
+            return self.SendChannelThreadMessage(self.channel, self.thread_id, message, format)
+
+    def Reply(self, message, format=""):
+        if self.channel == '':
+            return self.SendUserMessage(self.user, message, format)
+        else:
+            thread = ""
+            if self.threaded_message:
+                thread = self.thread_id
+            return self.SendUserChannelThreadMessage(self.user, self.channel, thread, message, format)
+
+    def ReplyThread(self, message, format=""):
+        if self.channel == '':
+            return self.SendUserMessage(self.user, message, format)
+        else:
+            return self.SendUserChannelThreadMessage(self.user, self.channel, self.thread_id, message, format)
+
+    def Direct(self):
+        "Get a direct messaging instance of the robot"
+        return DirectBot(self)
+
+    def MessageFormat(self, format):
+        "Get a bot with a non-default message format"
+        return FormattedBot(self, format)
+
+    def Threaded(self):
+        "Get a bot associated with the message thread"
+        return ThreadedBot(self)
+
+class DirectBot(Robot):
+    "Instantiate a robot for direct messaging with the user"
+    def __init__(self, bot):
+        self.channel = ""
+        self.thread_id = ""
+        self.threaded_message = None
+        self.user = bot.user
+        self.protocol = bot.protocol
+        self.format = bot.format
+        self.plugin_id = bot.plugin_id
+
+class FormattedBot(Robot):
+    "Instantiate a robot with a non-default message format"
+    def __init__(self, bot, format):
+        self.channel = bot.channel
+        self.thread_id = bot.thread_id
+        self.threaded_message = bot.threaded_message
+        self.user = bot.user
+        self.protocol = bot.protocol
+        self.format = format
+        self.plugin_id = bot.plugin_id
+
+class ThreadedBot(Robot):
+    "Instantiate a robot with a non-default message format"
+    def __init__(self, bot):
+        self.channel = bot.channel
+        self.thread_id = bot.thread_id
+        if len(self.channel) > 0:
+            self.threaded_message = "true"
+        else:
+            self.threaded_message = None
+        self.user = bot.user
+        self.protocol = bot.protocol
+        self.format = bot.format
+        self.plugin_id = bot.plugin_id
+</file_content file: lib/gopherbot_v1.py>
+<preamble file: lib/gopherbot_v1.rb>
+Python library for Gopherbot extensions written in Ruby
+</preamble>
+<file_content file: lib/gopherbot_v1.rb>
+require 'json'
+require 'net/http'
+require 'uri'
+
+class Attribute
+	def initialize(attr, ret)
+		@attr = attr
+		@ret = ret
+	end
+
+	attr_reader :attr, :ret
+
+	def to_s
+		@attr
+	end
+end
+
+class Reply
+	def initialize(reply, ret)
+		@reply = reply
+		@ret = ret
+	end
+
+	attr_reader :reply, :ret
+
+	def to_s
+		@reply
+	end
+end
+
+class Memory
+	def initialize(key, lt, exists, datum, ret)
+		@key = key
+		@lock_token = lt
+		@exists = exists
+		@datum = datum
+		@ret = ret
+	end
+
+	attr_reader :key, :lock_token, :exists, :ret
+	attr :datum, true
+end
+
+class BaseBot
+	# Return values for robot method calls
+	Ok = 0
+	UserNotFound = 1
+	ChannelNotFound = 2
+	AttributeNotFound = 3
+	FailedMessageSend = 4
+	FailedChannelJoin = 5
+	DatumNotFound = 6
+	DatumLockExpired = 7
+	DataFormatError = 8
+	BrainFailed = 9
+	InvalidDatumKey = 10
+	InvalidDblPtr = 11
+	InvalidCfgStruct = 12
+	NoConfigFound = 13
+	RetryPrompt = 14
+	ReplyNotMatched = 15
+	UseDefaultValue = 16
+	TimeoutExpired = 17
+	Interrupted = 18
+	MatcherNotFound = 19
+	NoUserEmail = 20
+	NoBotEmail = 21
+	MailError = 22
+	TaskNotFound = 23
+	MissingArguments = 24
+	InvalidStage = 25
+
+	# Plugin return values / exit codes
+	Normal = 0
+	Fail = 1
+	MechanismFail = 2
+	ConfigurationError = 3
+	NotFound = 6
+	Success = 7
+
+	attr_reader :user, :channel
+
+	def Direct()
+	end
+
+	def RandomString(sarr)
+		return sarr[@prng.rand(sarr.size)]
+	end
+
+	def RandomInt(i)
+		return @prng.rand(i)
+	end
+
+	def CheckAdmin()
+		return callBotFunc(__method__, {})["Boolean"]
+	end
+
+	def Subscribe()
+		return callBotFunc(__method__, {})["Boolean"]
+	end
+
+	def Unsubscribe()
+		return callBotFunc(__method__, {})["Boolean"]
+	end
+
+	def Elevate(immediate=false)
+		return callBotFunc(__method__, { "Immediate" => immediate })["Boolean"]
+	end
+
+	def SpawnJob(name, args)
+		return callBotFunc(__method__, { "Name" => name, "CmdArgs" => args })["RetVal"]
+	end
+
+	def AddJob(name, args)
+		return callBotFunc(__method__, { "Name" => name, "CmdArgs" => args })["RetVal"]
+	end
+
+	def AddTask(name, args)
+		return callBotFunc(__method__, { "Name" => name, "CmdArgs" => args })["RetVal"]
+	end
+
+	def FinalTask(name, args)
+		return callBotFunc(__method__, { "Name" => name, "CmdArgs" => args })["RetVal"]
+	end
+
+	def FailTask(name, args)
+		return callBotFunc(__method__, { "Name" => name, "CmdArgs" => args })["RetVal"]
+	end
+
+	def AddCommand(name, arg)
+		return callBotFunc(__method__, { "Plugin" => name, "Command" => arg })["RetVal"]
+	end
+
+	def FinalCommand(name, arg)
+		return callBotFunc(__method__, { "Plugin" => name, "Command" => arg })["RetVal"]
+	end
+
+	def FailCommand(name, arg)
+		return callBotFunc(__method__, { "Plugin" => name, "Command" => arg })["RetVal"]
+	end
+
+	def SetParameter(name, value)
+		return callBotFunc(__method__, { "Name" => name, "Value" => value })["Boolean"]
+	end
+
+	def Exclusive(tag, queue_task=false)
+		return callBotFunc(__method__, { "Tag" => tag, "QueueTask" => queue_task })["Boolean"]
+	end
+
+	def ExtendNamespace(ns, hist)
+		return callBotFunc(__method__, { "Extend" => ns, "Histories" => hist })["Boolean"]
+	end
+
+	def SetWorkingDirectory(path)
+		return callBotFunc(__method__, { "Path" => path })["Boolean"]
+	end
+
+	def GetRepoData()
+		return callBotFunc(__method__, {})
+	end
+
+	def CheckoutDatum(key, rw)
+		args = { "Key" => key, "RW" => rw }
+		ret = callBotFunc(__method__, args)
+		return Memory.new(key, ret["LockToken"], ret["Exists"], ret["Datum"], ret["RetVal"])
+	end
+
+	def CheckinDatum(m)
+		args = { "Key" => m.key, "Token" => m.lock_token }
+		callBotFunc(__method__, args)
+		return 0
+	end
+
+	def UpdateDatum(m)
+		args = { "Key" => m.key, "Token" => m.lock_token, "Datum" => m.datum }
+		ret = callBotFunc(__method__, args)
+		return ret["RetVal"]
+	end
+
+	def Remember(k, v, shared = false)
+		funcName = @threaded_message ? "RememberThread" : "Remember"
+		args = { "Key" => k, "Value" => v, "Shared" => shared }
+		ret = callBotFunc(funcName, args)
+		return ret["RetVal"]
+	end
+
+	def RememberContext(c, v)
+		return Remember("context:"+c, v, false)
+	end
+
+	def RememberThread(k, v, shared = false)
+		args = { "Key" => k, "Value" => v, "Shared" => shared }
+		ret = callBotFunc(__method__, args)
+		return ret["RetVal"]
+	end
+
+	def RememberContextThread(c, v)
+		return RememberThread("context:"+c, v, false)
+	end
+
+	def Recall(k, shared = false)
+		args = { "Key" => k, "Shared" => shared }
+		ret = callBotFunc(__method__, args)["StrVal"]
+	end
+
+	def GetTaskConfig()
+		ret = callBotFunc(__method__, {})
+		return ret
+	end
+
+	def GetSenderAttribute(attr)
+		args = { "Attribute" => attr }
+		ret = callBotFunc(__method__, args)
+		return Attribute.new(ret["Attribute"], ret["RetVal"])
+	end
+
+	def GetUserAttribute(user, attr)
+		args = { "User" => user, "Attribute" => attr }
+		ret = callBotFunc(__method__, args)
+		return Attribute.new(ret["Attribute"], ret["RetVal"])
+	end
+
+	def GetBotAttribute(attr)
+		args = { "Attribute" => attr }
+		ret = callBotFunc(__method__, args)
+		return Attribute.new(ret["Attribute"], ret["RetVal"])
+	end
+
+	def Log(level, message)
+		args = { "Level" => level, "Message" => message }
+		callBotFunc("Log", args)
+		return 0
+	end
+
+	def SendChannelMessage(channel, message, format="")
+		return SendChannelThreadMessage(channel, "", message, format)
+	end
+
+	def SendChannelThreadMessage(channel, thread, message, format="")
+		format = format.to_s if format.class == Symbol
+		args = { "Channel" => channel, "Thread" => thread, "Message" => message }
+		ret = callBotFunc(__method__, args, format)
+		return ret["RetVal"]
+	end
+
+	def SendUserMessage(user, message, format="")
+		format = format.to_s if format.class == Symbol
+		args = { "User" => user, "Message" => message }
+		ret = callBotFunc(__method__, args, format)
+		return ret["RetVal"]
+	end
+
+	def SendUserChannelMessage(user, channel, message, format="")
+		return SendUserChannelThreadMessage(user, channel, "", message, format)
+	end
+
+	def SendUserChannelThreadMessage(user, channel, thread, message, format="")
+		format = format.to_s if format.class == Symbol
+		args = { "User" => user, "Channel" => channel, "Thread" => thread, "Message" => message }
+		ret = callBotFunc(__method__, args, format)
+		return ret["RetVal"]
+	end
+
+	def Say(message, format="")
+		format = format.to_s if format.class == Symbol
+		if @channel.empty?
+			return SendUserMessage(@user, message, format)
+		else
+			thread = @threaded_message ? @thread_id : ""
+			return SendChannelThreadMessage(@channel, thread, message, format)
+		end
+	end
+
+	def SayThread(message, format="")
+		format = format.to_s if format.class == Symbol
+		if @channel.empty?
+			return SendUserMessage(@user, message, format)
+		else
+			return SendChannelThreadMessage(@channel, @thread_id, message, format)
+		end
+	end
+
+	def Pause(seconds)
+		sleep seconds
+	end
+
+	def Reply(message, format="")
+		format = format.to_s if format.class == Symbol
+		if @channel.empty?
+			return SendUserMessage(@user, message, format)
+		else
+			thread = @threaded_message ? @thread_id : ""
+			return SendUserChannelThreadMessage(@user, @channel, thread, message, format)
+		end
+	end
+
+	def ReplyThread(message, format="")
+		format = format.to_s if format.class == Symbol
+		if @channel.empty?
+			return SendUserMessage(@user, message, format)
+		else
+			return SendUserChannelThreadMessage(@user, @channel, @thread_id, message, format)
+		end
+	end
+
+	def PromptForReply(regex_id, prompt)
+		thread = @threaded_message ? @thread_id : ""
+		return PromptUserChannelThreadForReply(regex_id, @user, @channel, thread, prompt)
+	end
+
+	def PromptThreadForReply(regex_id, prompt)
+		return PromptUserChannelThreadForReply(regex_id, @user, @channel, @thread_id, prompt)
+	end
+
+	def PromptUserForReply(regex_id, prompt)
+		return PromptUserChannelThreadForReply(regex_id, @user, "", "", prompt)
+	end
+
+	def PromptUserChannelThreadForReply(regex_id, user, channel, thread, prompt)
+		args = { "RegexID" => regex_id, "User" => user, "Channel" => channel, "Thread" => thread, "Prompt" => prompt }
+		for i in 1..3
+			ret = callBotFunc(__method__, args)
+			next if ret["RetVal"] == RetryPrompt
+			return Reply.new(ret["Reply"], ret["RetVal"])
+		end
+		if ret == RetryPrompt
+			return Reply.new(ret["Reply"], Interrupted)
+		else
+			return Reply.new(ret["Reply"], ret["RetVal"])
+		end
+	end
+
+	def callBotFunc(funcname, args, format="")
+		if format.size == 0
+			format = @format
+		end
+		func = {
+			"FuncName" => funcname,
+			"Format" => format,
+			"CallerID" => @plugin_id,
+			"FuncArgs" => args
+		}
+		uri = URI.parse(ENV["GOPHER_HTTP_POST"] + "/json")
+		http = Net::HTTP.new(uri.host, uri.port)
+		req = Net::HTTP::Post.new(uri, initheader = {'Content-Type' =>'application/json'})
+		req.body = func.to_json
+#		STDERR.puts "Sending:\n#{req.body}"
+		res = http.request(req)
+		body = res.body()
+#		STDERR.puts "Got back:\n#{body}"
+		return JSON.load(body)
+	end
+	private :callBotFunc
+end
+
+class Robot < BaseBot
+	attr_accessor :channel, :channel_id, :message_id, :thread_id, :threaded_message, :user, :user_id, :plugin_id, :protocol, :format
+	def initialize()
+		@channel = ENV["GOPHER_CHANNEL"]
+		@channel_id = ENV["GOPHER_CHANNEL_ID"]
+		@message_id = ENV["GOPHER_MESSAGE_ID"]
+        @thread_id = ENV["GOPHER_THREAD_ID"]
+		@threaded_message = ENV["GOPHER_THREADED_MESSAGE"]
+		@user = ENV["GOPHER_USER"]
+		@user_id = ENV["GOPHER_USER_ID"]
+		@plugin_id = ENV["GOPHER_CALLER_ID"]
+		@protocol = ENV["GOPHER_PROTOCOL"]
+		@brain = ENV["GOPHER_BRAIN"]
+		@format = ""
+		@prng = Random.new
+	end
+
+	def Direct()
+		DirectBot.new
+	end
+
+	def Threaded()
+		ThreadedBot.new
+	end
+
+	def MessageFormat(format)
+		FormattedBot.new(format)
+	end
+end
+
+class DirectBot < Robot
+	def initialize()
+		super
+		@channel = ""
+		@thread_id = ""
+		@threaded_message = nil
+	end
+end
+
+class ThreadedBot < Robot
+	def initialize()
+		super
+		if @channel.length > 0
+			@threaded_message = "true"
+		else
+			@threaded_message = nil
+		end
+	end
+end
+
+class FormattedBot < BaseBot
+	def initialize(format)
+		super
+		@format = format
+	end
+end
+</file_content file: lib/gopherbot_v1.rb>
+<preamble file: lib/gopherbot_v1.sh>
+Python library for Gopherbot extensions written in Bash (note the jq utility is required)
+</preamble>
+<file_content file: lib/gopherbot_v1.sh>
+#!/bin/bash
+# shellLib.sh - bash plugins should source this with 'source $GOPHER_INSTALLDIR/util/shellLib.sh'
+# Return values for robot method calls
+GBRET_Ok=0
+GBRET_UserNotFound=1
+GBRET_ChannelNotFound=2
+GBRET_AttributeNotFound=3
+GBRET_FailedMessageSend=4
+GBRET_FailedChannelJoin=5
+GBRET_DatumNotFound=6
+GBRET_DatumLockExpired=7
+GBRET_DataFormatError=8
+GBRET_BrainFailed=9
+GBRET_InvalidDatumKey=10
+GBRET_InvalidDblPtr=11
+GBRET_InvalidCfgStruct=12
+GBRET_NoConfigFound=13
+GBRET_RetryPrompt=14
+GBRET_ReplyNotMatched=15
+GBRET_UseDefaultValue=16
+GBRET_TimeoutExpired=17
+GBRET_Interrupted=18
+GBRET_MatcherNotFound=19
+GBRET_NoUserEmail=20
+GBRET_NoBotEmail=21
+GBRET_MailError=22
+GBRET_TaskNotFound=23
+GBRET_MissingArguments=24
+GBRET_InvalidStage=25
+
+# Plugin return values / exit codes
+PLUGRET_Normal=0
+PLUGRET_Fail=1
+PLUGRET_MechanismFail=2
+PLUGRET_ConfigurationError=3
+PLUGRET_NotFound=6
+PLUGRET_Success=7
+
+base64_encode(){
+	local MESSAGE
+	MESSAGE=$(echo -n "$@" | base64)
+	echo -n "$MESSAGE"
+}
+
+# Create the full JSON string and post it
+gbPostJSON(){
+	local GB_FUNCNAME=$1
+	local GB_FUNCARGS="$2"
+	local FORMAT=${3:-$GB_FORMAT}
+	local JSON JSONRET
+	#local GB_DEBUG="true"
+	JSON=$(cat <<EOF
+{
+	"FuncName": "$GB_FUNCNAME",
+	"Format": "$FORMAT",
+	"CallerID": "$GOPHER_CALLER_ID",
+	"FuncArgs": $GB_FUNCARGS
+}
+EOF
+)
+	if [ "$GB_DEBUG" = "true" ]
+	then
+		echo "Sending:" >&2
+		echo "$JSON" >&2
+	fi
+	JSONRET=$(echo "$JSON" | curl -f -X POST -d @- $GOPHER_HTTP_POST/json 2>/dev/null)
+	if [ "$GB_DEBUG" = "true" ]
+	then
+		echo "Got back:" >&2
+		echo "$JSONRET" >&2
+	fi
+	echo "$JSONRET"
+}
+
+gbBotRet() {
+	local JSON="$1"
+	local RETVAL
+	RETVAL=$(echo "$JSON" | jq .RetVal)
+	return $RETVAL
+}
+
+gbExtract() {
+	local JSON="$1"
+	local ITEM="$2"
+	echo "$JSON" | jq -r .$ITEM
+}
+
+CheckAdmin(){
+	local GB_FUNCARGS="{}"
+	GB_RET=$(gbPostJSON $FUNCNAME "$GB_FUNCARGS")
+	local RETVAL=$(echo "$GB_RET" | jq .Boolean)
+	echo "$RETVAL"
+	if [ "$RETVAL" -eq "true" ]
+	then
+		return 0
+	else
+		return 1
+	fi
+}
+
+Subscribe(){
+	local GB_FUNCARGS="{}"
+	GB_RET=$(gbPostJSON $FUNCNAME "$GB_FUNCARGS")
+	local RETVAL=$(echo "$GB_RET" | jq .Boolean)
+	echo "$RETVAL"
+	if [ "$RETVAL" -eq "true" ]
+	then
+		return 0
+	else
+		return 1
+	fi
+}
+
+Unsubscribe(){
+	local GB_FUNCARGS="{}"
+	GB_RET=$(gbPostJSON $FUNCNAME "$GB_FUNCARGS")
+	local RETVAL=$(echo "$GB_RET" | jq .Boolean)
+	echo "$RETVAL"
+	if [ "$RETVAL" -eq "true" ]
+	then
+		return 0
+	else
+		return 1
+	fi
+}
+
+Remember(){
+	if [ -z "$1" -o -z "$2" ]
+	then
+		return 1
+	fi
+	if [ "$3" ]
+	then
+		SHARED=', "Shared": true'
+	fi
+	local GB_FUNCNAME="Remember"
+	if [ "$GOPHER_THREADED_MESSAGE" ]
+	then
+		GB_FUNCNAME="RememberThread"
+	fi
+	local R_KEY=$(base64_encode "$1")
+	local R_MEMORY=$(base64_encode "$2")
+	local GB_FUNCARGS=$(cat <<EOF
+{
+	"Key": "$R_KEY",
+	"Value": "$R_MEMORY",
+	"Base64": true$SHARED
+}
+EOF
+)
+	gbPostJSON $GB_FUNCNAME "$GB_FUNCARGS"
+	return 0
+}
+
+RememberContext(){
+	if [ -z "$1" -o -z "$2" ]
+	then
+		return 1
+	fi
+	Remember "context:$1" "$2"
+	return 0
+}
+
+RememberThread(){
+	if [ -z "$1" -o -z "$2" ]
+	then
+		return 1
+	fi
+	if [ "$3" ]
+	then
+		SHARED=', "Shared": true'
+	fi
+	local R_KEY=$(base64_encode "$1")
+	local R_MEMORY=$(base64_encode "$2")
+	local GB_FUNCARGS=$(cat <<EOF
+{
+	"Key": "$R_KEY",
+	"Value": "$R_MEMORY",
+	"Base64": true$SHARED
+}
+EOF
+)
+	gbPostJSON $FUNCNAME "$GB_FUNCARGS"
+	return 0
+}
+
+RememberContextThread(){
+	if [ -z "$1" -o -z "$2" ]
+	then
+		return 1
+	fi
+	RememberThread "context:$1" "$2"
+	return 0
+}
+
+Pause(){
+	sleep $1
+}
+
+Recall(){
+	if [ -z "$1" ]
+	then
+		return 1
+	fi
+	if [ "$3" ]
+	then
+		SHARED=', "Shared": true'
+	fi
+	local R_KEY=$(base64_encode "$1")
+	local GB_FUNCARGS=$(cat <<EOF
+{
+	"Key": "$R_KEY",
+	"Base64": true$SHARED
+}
+EOF
+)
+	local GB_RET=$(gbPostJSON $FUNCNAME "$GB_FUNCARGS")
+	local RETVAL=$(echo "$GB_RET" | jq -r .StrVal)
+	echo -n "$RETVAL"
+}
+
+SetParameter() {
+	local NAME=$(base64_encode "$1")
+	local VALUE=$(base64_encode "$2")
+	local GB_FUNCARGS=$(cat <<EOF
+{
+	"Name": "$NAME",
+	"Value": "$VALUE",
+	"Base64": true
+}
+EOF
+)
+	GB_RET=$(gbPostJSON $FUNCNAME "$GB_FUNCARGS" $FORMAT)
+	local RETVAL=$(echo "$GB_RET" | jq .Boolean)
+	if [ "$RETVAL" = "true" ]
+	then
+		return 0
+	else
+		return 1
+	fi
+}
+
+ExtendNamespace() {
+	local NS="$1"
+	local HIST="$2"
+	local GB_FUNCARGS=$(cat <<EOF
+{
+	"Extend": "$NS",
+	"Histories": $2
+}
+EOF
+)
+	GB_RET=$(gbPostJSON $FUNCNAME "$GB_FUNCARGS" $FORMAT)
+	local RETVAL=$(echo "$GB_RET" | jq .Boolean)
+	if [ "$RETVAL" = "true" ]
+	then
+		return 0
+	else
+		return 1
+	fi
+}
+
+SetWorkingDirectory() {
+	local WDPATH="$1"
+	local GB_FUNCARGS=$(cat <<EOF
+{
+	"Path": "$WDPATH"
+}
+EOF
+)
+	GB_RET=$(gbPostJSON $FUNCNAME "$GB_FUNCARGS" $FORMAT)
+	local RETVAL=$(echo "$GB_RET" | jq .Boolean)
+	if [ "$RETVAL" = "true" ]
+	then
+		return 0
+	else
+		return 1
+	fi
+}
+
+_pipeTask(){
+	local JSTR
+	local FNAME="$1"
+	local TNAME="$2"
+	shift 2
+	for ARG in "$@"
+	do
+		JSTR="$JSTR \"$ARG\""
+	done
+	if [ -n "$JSTR" ]
+	then
+		JSTR=$(echo ${JSTR//\" \"/\", \"})
+	fi
+	local GB_FUNCARGS=$(cat <<EOF
+{
+	"Name": "$TNAME",
+	"CmdArgs": [ $JSTR ]
+}
+EOF
+)
+	GB_RET=$(gbPostJSON $FNAME "$GB_FUNCARGS" $FORMAT)
+	gbBotRet "$GB_RET"
+}
+
+AddJob(){
+	_pipeTask $FUNCNAME "$@"
+}
+
+AddTask(){
+	_pipeTask $FUNCNAME "$@"
+}
+
+FinalTask(){
+	_pipeTask $FUNCNAME "$@"
+}
+
+FailTask(){
+	_pipeTask $FUNCNAME "$@"
+}
+
+SpawnJob(){
+	_pipeTask $FUNCNAME "$@"
+}
+
+_cmdTask(){
+	local JSTR
+	local FNAME="$1"
+	local TNAME="$2"
+	local PCMD="$3"
+	local GB_FUNCARGS=$(cat <<EOF
+{
+	"Plugin": "$TNAME",
+	"Command": "$PCMD"
+}
+EOF
+)
+	GB_RET=$(gbPostJSON $FNAME "$GB_FUNCARGS" $FORMAT)
+	gbBotRet "$GB_RET"
+}
+
+AddCommand(){
+	_cmdTask $FUNCNAME "$@"
+}
+
+FailCommand(){
+	_cmdTask $FUNCNAME "$@"
+}
+
+FinalCommand(){
+	_cmdTask $FUNCNAME "$@"
+}
+
+Exclusive(){
+	local QUEUE_TASK="false"
+	local TAG="$1"
+	if [ -n "$2" ]
+	then
+		QUEUE_TASK=$2
+	fi
+	local GB_FUNCARGS=$(cat <<EOF
+{
+	"Tag": "$TAG",
+	"QueueTask": $QUEUE_TASK
+}
+EOF
+)
+	GB_RET=$(gbPostJSON $FUNCNAME "$GB_FUNCARGS")
+	local RETVAL=$(echo "$GB_RET" | jq .Boolean)
+	if [ "$RETVAL" = "true" ]
+	then
+		return 0
+	else
+		return 1
+	fi
+}
+
+Elevate(){
+	IMMEDIATE="false"
+	if [ -n "$1" ]
+	then
+		IMMEDIATE="$1"
+	fi
+	local GB_FUNCARGS=$(cat <<EOF
+{
+	"Immediate": "$IMMEDIATE"
+}
+EOF
+)
+	GB_RET=$(gbPostJSON $FUNCNAME "$GB_FUNCARGS")
+	local RETVAL=$(echo "$GB_RET" | jq .Boolean)
+	if [ "$RETVAL" = "true" ]
+	then
+		return 0
+	else
+		return 1
+	fi
+}
+
+GetBotAttribute(){
+	local GB_FUNCARGS GB_RET
+	local ATTR="$1"
+	GB_FUNCARGS=$(cat <<EOF
+{
+	"Attribute": "$ATTR"
+}
+EOF
+)
+	GB_RET=$(gbPostJSON $FUNCNAME "$GB_FUNCARGS")
+	gbExtract "$GB_RET" Attribute
+	gbBotRet "$GB_RET"
+}
+
+GetSenderAttribute(){
+	local GB_FUNCARGS
+	local ATTR="$1"
+	GB_FUNCARGS=$(cat <<EOF
+{
+	"Attribute": "$ATTR"
+}
+EOF
+)
+	GB_RET=$(gbPostJSON $FUNCNAME "$GB_FUNCARGS")
+	gbExtract "$GB_RET" Attribute
+	gbBotRet "$GB_RET"
+}
+
+GetUserAttribute(){
+	local GB_FUNCARGS GB_RET
+	local GUA_USER="$1"
+	local ATTR="$2"
+	GB_FUNCARGS=$(cat <<EOF
+{
+	"User": "$GUA_USER",
+	"Attribute": "$ATTR"
+}
+EOF
+)
+	GB_RET=$(gbPostJSON $FUNCNAME "$GB_FUNCARGS")
+	gbExtract "$GB_RET" Attribute
+	gbBotRet "$GB_RET"
+}
+
+Log(){
+	local GB_FUNCARGS GB_RET
+	local GLM_LEVEL="$1"
+	local GLM_MESSAGE=$(base64_encode "$2")
+	GB_FUNCARGS=$(cat <<EOF
+{
+	"Level": "$GLM_LEVEL",
+	"Message": "$GLM_MESSAGE",
+	"Base64" : true
+}
+EOF
+)
+	GB_RET=$(gbPostJSON $FUNCNAME "$GB_FUNCARGS")
+	gbBotRet "$GB_RET"
+}
+
+PromptUserChannelForReply(){
+	PromptUserChannelThreadForReply "$1" "$2" "$3" "" "$4"
+}
+
+PromptUserChannelThreadForReply(){
+	local FORMAT
+	if [[ $1 = -? ]]; then FORMAT=$(getFormat $1); shift; fi
+	local GB_FUNCARGS GB_RET
+	local REGEX="$1"
+	local PUSER="$2"
+	local PCHANNEL="$3"
+	local PTHREAD="$4"
+	local PROMPT=$(base64_encode "$5")
+	GB_FUNCARGS=$(cat <<EOF
+{
+	"RegexID": "$REGEX",
+	"User": "$PUSER",
+	"Channel": "$PCHANNEL",
+	"Prompt": "$PROMPT",
+	"Base64" : true
+}
+EOF
+)
+	local RETVAL
+	for TRY in 0 1 2
+	do
+		GB_RET=$(gbPostJSON $FUNCNAME "$GB_FUNCARGS" $FORMAT)
+		gbBotRet "$GB_RET"
+		RETVAL=$?
+		if [ $RETVAL -eq $GBRET_RetryPrompt ]
+		then
+			continue
+		fi
+		gbExtract "$GB_RET" Reply
+		return $RETVAL
+	done
+	gbBotRet "$GB_RET"
+	RETVAL=$?
+	if [ $RETVAL -eq $GBRET_RetryPrompt ]
+	then
+		return $GBRET_Interrupted
+	else
+		return $RETVAL
+	fi
+}
+
+PromptForReply(){
+	local FORMAT
+	if [[ $1 = -? ]]; then FORMAT=$1; shift; fi
+	local REGEX=$1
+	local THREAD=""
+	[ "$GOPHER_THREADED_MESSAGE" ] && THREAD="$GOPHER_THREAD_ID"
+	shift
+	PromptUserChannelThreadForReply $FORMAT "$REGEX" "$GOPHER_USER" "$GOPHER_CHANNEL" "$THREAD" "$*"
+}
+
+PromptThreadForReply(){
+	local FORMAT
+	if [[ $1 = -? ]]; then FORMAT=$1; shift; fi
+	local REGEX=$1
+	shift
+	PromptUserChannelThreadForReply $FORMAT "$REGEX" "$GOPHER_USER" "$GOPHER_CHANNEL" "$GOPHER_THREAD_ID" "$*"
+}
+
+PromptUserForReply(){
+	local FORMAT
+	if [[ $1 = -? ]]; then FORMAT=$1; shift; fi
+	local REGEX=$1
+	local PUSER=$2
+	shift 2
+	PromptUserChannelThreadForReply "$REGEX" "$PUSER" "" "" "$*"
+}
+
+MessageFormat(){
+	if [ -n "$1" ]
+	then
+		export GB_FORMAT="$1"
+	fi
+}
+
+getFormat(){
+	case "$1" in
+	"-f")
+		echo "Fixed"
+		;;
+	"-r")
+		echo "Raw"
+		;;
+	"-v")
+		echo "Variable"
+		;;
+	esac
+}
+
+SendUserMessage(){
+	local FORMAT
+	if [[ $1 = -? ]]; then FORMAT=$(getFormat $1); shift; fi
+	local GB_FUNCARGS GB_RET
+	local SUM_USER=$1
+	shift
+	local MESSAGE="$*"
+	MESSAGE=$(base64_encode "$MESSAGE")
+
+	GB_FUNCARGS=$(cat <<EOF
+{
+	"User": "$SUM_USER",
+	"Message": "$MESSAGE",
+	"Base64" : true
+}
+EOF
+)
+	GB_RET=$(gbPostJSON $FUNCNAME "$GB_FUNCARGS" $FORMAT)
+	gbBotRet "$GB_RET"
+}
+
+SendUserChannelMessage(){
+	local SEND_USER="$1"
+	local SEND_CHANNEL="$2"
+	shift 2
+	SendUserChannelThreadMessage "$SEND_USER" "$SEND_CHANNEL" "" "$@"
+}
+
+SendUserChannelThreadMessage(){
+	local FORMAT
+	if [[ $1 = -? ]]; then FORMAT=$(getFormat $1); shift; fi
+	local GB_FUNCARGS GB_RET
+	local SUCTM_USER=$1
+	local SUCTM_CHANNEL=$2
+	local SUCTM_THREAD="$3"
+	shift 3
+	local MESSAGE="$*"
+	MESSAGE=$(base64_encode "$MESSAGE")
+
+	GB_FUNCARGS=$(cat <<EOF
+{
+	"User": "$SUCTM_USER",
+	"Channel": "$SUCTM_CHANNEL",
+	"Thread": "$SUCTM_THREAD",
+	"Message": "$MESSAGE",
+	"Base64" : true
+}
+EOF
+)
+	GB_RET=$(gbPostJSON $FUNCNAME "$GB_FUNCARGS" $FORMAT)
+	gbBotRet "$GB_RET"
+}
+
+SendChannelMessage(){
+	local SEND_CHANNEL="$1"
+	shift
+	SendChannelThreadMessage "$SEND_CHANNEL" "" "$@"
+}
+
+SendChannelThreadMessage(){
+	local FORMAT
+	if [[ $1 = -? ]]; then FORMAT=$(getFormat $1); shift; fi
+	local GB_FUNCARGS GB_RET
+	local SCTM_CHANNEL=$1
+	local SCTM_THREAD="$2"
+	shift 2
+	local MESSAGE="$*"
+	MESSAGE=$(base64_encode "$MESSAGE")
+
+	GB_FUNCARGS=$(cat <<EOF
+{
+	"Channel": "$SCTM_CHANNEL",
+	"Thread": "$SCTM_THREAD",
+	"Message": "$MESSAGE",
+	"Base64" : true
+}
+EOF
+)
+	GB_RET=$(gbPostJSON $FUNCNAME "$GB_FUNCARGS" $FORMAT)
+	gbBotRet "$GB_RET"
+}
+
+# Convenience functions so that copies of this logic don't wind up in a bunch of plugins
+Say(){
+	local FARG
+	[[ $1 == -? ]] && { FARG=$1; shift; }
+	if [ -n "$GOPHER_CHANNEL" ]
+	then
+		local THREAD=""
+		[ "$GOPHER_THREADED_MESSAGE" ] && THREAD="$GOPHER_THREAD_ID"
+		SendChannelThreadMessage $FARG "$GOPHER_CHANNEL" "$THREAD" "$*"
+	else
+		SendUserMessage $FARG "$GOPHER_USER" "$*"
+	fi
+}
+
+Reply(){
+	local FARG
+	[[ $1 == -? ]] && { FARG=$1; shift; }
+	if [ -n "$GOPHER_CHANNEL" ]
+	then
+		local THREAD=""
+		[ "$GOPHER_THREADED_MESSAGE" ] && THREAD="$GOPHER_THREAD_ID"
+		SendUserChannelThreadMessage $FARG "$GOPHER_USER" "$GOPHER_CHANNEL" "$THREAD" "$*"
+	else
+		SendUserMessage $FARG "$GOPHER_USER" "$*"
+	fi
+}
+
+SayThread(){
+	local FARG
+	[[ $1 == -? ]] && { FARG=$1; shift; }
+	if [ -n "$GOPHER_CHANNEL" ]
+	then
+		SendChannelThreadMessage $FARG "$GOPHER_CHANNEL" "$GOPHER_THREAD_ID" "$*"
+	else
+		SendUserMessage $FARG "$GOPHER_USER" "$*"
+	fi
+}
+
+ReplyThread(){
+	local FARG
+	[[ $1 == -? ]] && { FARG=$1; shift; }
+	if [ -n "$GOPHER_CHANNEL" ]
+	then
+		SendUserChannelThreadMessage $FARG "$GOPHER_USER" "$GOPHER_CHANNEL" "$GOPHER_THREAD_ID" "$*"
+	else
+		SendUserMessage $FARG "$GOPHER_USER" "$*"
+	fi
+}
+</file_content file: lib/gopherbot_v1.sh>
+<preamble file: lib/gopherbot_v2.py>
+Python library for Gopherbot extensions written in Python v3+
+</preamble>
+<file_content file: lib/gopherbot_v2.py>
+import os
+import json
+import random
+import sys
+import time
+import urllib.request
+
+# python 3 version
+
+class Attribute:
+    "A Gopherbot Attribute return object"
+    def __init__(self, ret):
+        self.attr = ret["Attribute"]
+        self.ret = ret["RetVal"]
+
+    def __str__(self):
+        return self.attr
+
+class Reply:
+    "A Gopherbot Reply return object"
+    def __init__(self, ret):
+        self.reply = ret["Reply"]
+        self.ret = ret["RetVal"]
+
+    def __str__(self):
+        return self.reply
+
+class Memory:
+    "A Gopherbot long-term memory object"
+    def __init__(self, key, ret):
+        self.key = key
+        self.lock_token = ret["LockToken"]
+        self.exists = ret["Exists"]
+        self.datum = ret["Datum"]
+        self.ret = ret["RetVal"]
+
+class Robot:
+    "Instantiate a robot object for use with Gopherbot"
+
+    # Return values for robot method calls
+    Ok = 0
+    UserNotFound = 1
+    ChannelNotFound = 2
+    AttributeNotFound = 3
+    FailedMessageSend = 4
+    FailedChannelJoin = 5
+    DatumNotFound = 6
+    DatumLockExpired = 7
+    DataFormatError = 8
+    BrainFailed = 9
+    InvalidDatumKey = 10
+    InvalidDblPtr = 11
+    InvalidCfgStruct = 12
+    NoConfigFound = 13
+    RetryPrompt = 14
+    ReplyNotMatched = 15
+    UseDefaultValue = 16
+    TimeoutExpired = 17
+    Interrupted = 18
+    MatcherNotFound = 19
+    NoUserEmail = 20
+    NoBotEmail = 21
+    MailError = 22
+    TaskNotFound = 23
+    MissingArguments = 24
+    InvalidStage = 25
+
+    # Plugin return values / exit codes
+    Normal = 0
+    Fail = 1
+    MechanismFail = 2
+    ConfigurationError = 3
+    NotFound = 6
+    Success = 7
+
+    def __init__(self):
+        random.seed()
+        self.channel = os.getenv("GOPHER_CHANNEL")
+        self.thread_id = os.getenv("GOPHER_THREAD_ID")
+        self.threaded_message = os.getenv("GOPHER_THREADED_MESSAGE")
+        self.user = os.getenv("GOPHER_USER")
+        self.plugin_id = os.getenv("GOPHER_CALLER_ID")
+        self.format = ""
+        self.protocol = os.getenv("GOPHER_PROTOCOL")
+
+    def Call(self, func_name, func_args, format=""):
+        if len(format) == 0:
+            format = self.format
+        func_call = { "FuncName": func_name, "Format": format,
+                    "CallerID": self.plugin_id,
+                    "FuncArgs": func_args }
+        data = json.dumps(func_call)
+        data = bytes(data, 'utf-8')
+        req = urllib.request.Request(url="%s/json" % os.getenv("GOPHER_HTTP_POST"),
+            data=data)
+        req.add_header('Content-Type', 'application/json')
+        # sys.stderr.write("Sending: %s\n" % func_json)
+        res = urllib.request.urlopen(req)
+        body = res.read()
+        # sys.stderr.write("Got back: %s\n" % body)
+        return json.loads(body.decode("utf-8"))
+
+    def CheckAdmin(self):
+        return self.Call(sys._getframe().f_code.co_name, {})["Boolean"]
+
+    def Subscribe(self):
+        return self.Call(sys._getframe().f_code.co_name, {})["Boolean"]
+
+    def Unsubscribe(self):
+        return self.Call(sys._getframe().f_code.co_name, {})["Boolean"]
+
+    def Elevate(self, immediate=False):
+        return self.Call(sys._getframe().f_code.co_name, { "Immediate": immediate })["Boolean"]
+
+    def Pause(self, s):
+        time.sleep(s)
+
+    def RandomString(self, sa):
+        return sa[random.randint(0, (len(sa)-1))]
+
+    def GetTaskConfig(self):
+        return self.Call(sys._getframe().f_code.co_name, {})
+
+    def CheckoutDatum(self, key, rw):
+        ret = self.Call(sys._getframe().f_code.co_name, { "Key": key, "RW": rw })
+        return Memory(key, ret)
+
+    def SpawnJob(self, name, args):
+        return self.Call(sys._getframe().f_code.co_name, { "Name": name, "CmdArgs": args })["RetVal"]
+
+    def AddJob(self, name, args):
+        return self.Call(sys._getframe().f_code.co_name, { "Name": name, "CmdArgs": args })["RetVal"]
+
+    def AddTask(self, name, args):
+        return self.Call(sys._getframe().f_code.co_name, { "Name": name, "CmdArgs": args })["RetVal"]
+
+    def FinalTask(self, name, args):
+        return self.Call(sys._getframe().f_code.co_name, { "Name": name, "CmdArgs": args })["RetVal"]
+
+    def FailTask(self, name, args):
+        return self.Call(sys._getframe().f_code.co_name, { "Name": name, "CmdArgs": args })["RetVal"]
+
+    def AddCommand(self, plugin, cmd):
+        return self.Call(sys._getframe().f_code.co_name, { "Plugin": plugin, "Command": cmd })["RetVal"]
+
+    def FinalCommand(self, plugin, cmd):
+        return self.Call(sys._getframe().f_code.co_name, { "Plugin": plugin, "Command": cmd })["RetVal"]
+
+    def FailCommand(self, plugin, cmd):
+        return self.Call(sys._getframe().f_code.co_name, { "Plugin": plugin, "Command": cmd })["RetVal"]
+
+    def SetParameter(self, name, value):
+        return self.Call(sys._getframe().f_code.co_name, { "Name": name, "Value": value })["Boolean"]
+
+    def Exclusive(self, tag, queue_task=False):
+        return self.Call(sys._getframe().f_code.co_name, { "Tag": tag, "QueueTask": queue_task })["Boolean"]
+
+    def ExtendNamespace(self, ns, hist):
+        return self.Call(sys._getframe().f_code.co_name, { "Extend": ns, "Histories": hist })["Boolean"]
+
+    def SetWorkingDirectory(self, path):
+        return self.Call(sys._getframe().f_code.co_name, { "Path": path })["Boolean"]
+
+    def GetRepoData(self):
+        return self.Call(sys._getframe().f_code.co_name, {})
+
+    def Log(self, level, msg):
+        self.Call(sys._getframe().f_code.co_name, { "Level": level, "Message": msg })
+
+    def CheckinDatum(self, m):
+        self.Call(sys._getframe().f_code.co_name, { "Key": m.key, "Token": m.lock_token })
+
+    def UpdateDatum(self, m):
+        ret = self.Call(sys._getframe().f_code.co_name, { "Key": m.key, "Token": m.lock_token,
+        "Datum": m.datum })
+        return ret["RetVal"]
+
+    def GetSenderAttribute(self, attr):
+        ret = self.Call(sys._getframe().f_code.co_name, { "Attribute": attr })
+        return Attribute(ret)
+
+    def GetUserAttribute(self, user, attr):
+        ret = self.Call(sys._getframe().f_code.co_name, { "User": user, "Attribute": attr })
+        return Attribute(ret)
+
+    def GetBotAttribute(self, attr):
+        ret = self.Call(sys._getframe().f_code.co_name, { "Attribute": attr })
+        return Attribute(ret)
+
+    def Remember(k, v, shared=False):
+        funcname = "RememberThread" if self.threaded_message else "Remember"
+        ret = self.Call(funcname, { "Key": k, "Value": v, "Shared": shared })
+        return ret["RetVal"]
+
+    def RememberContext(k, v):
+        return self.Remember("context:"+k, v, False)
+
+    def RememberThread(k, v, shared=False):
+        ret = self.Call(sys._getframe().f_code.co_name, { "Key": k, "Value": v, "Shared": shared })
+        return ret["RetVal"]
+
+    def RememberContextThread(k, v):
+        return self.RememberThread("context:"+k, v, False)
+
+    def Recall(self, memory, shared=False):
+        ret = self.Call(sys._getframe().f_code.co_name, { "Key": memory, "Shared": shared })
+        return ret["StrVal"]
+
+    def PromptForReply(self, regex_id, prompt, format=""):
+        thread = ""
+        if self.threaded_message:
+            thread = self.thread_id
+        return self.PromptUserChannelThreadForReply(regex_id, self.user, self.channel, thread, prompt, format)
+
+    def PromptThreadForReply(self, regex_id, prompt, format=""):
+        return self.PromptUserChannelThreadForReply(regex_id, self.user, self.channel, self.thread_id, prompt, format)
+
+    def PromptUserForReply(self, regex_id, user, prompt, format=""):
+        return self.PromptUserChannelThreadForReply(regex_id, user, "", prompt, format)
+
+    def PromptUserChannelThreadForReply(self, regex_id, user, channel, thread, prompt, format=""):
+        for i in range(0, 3):
+            rep = self.Call(sys._getframe().f_code.co_name, { "RegexID": regex_id, "User": user, "Channel": channel, "Thread": thread, "Prompt": prompt }, format)
+            if rep["RetVal"] == self.RetryPrompt:
+                continue
+            return Reply(rep)
+        if rep["RetVal"] == self.RetryPrompt:
+            rep["RetVal"] = self.Interrupted
+        return Reply(rep)
+
+    def SendChannelMessage(self, channel, message, format=""):
+        return self.SendChannelThreadMessage(channel, "", message, format)
+
+    def SendChannelThreadMessage(self, channel, thread, message, format=""):
+        ret = self.Call(sys._getframe().f_code.co_name, { "Channel": channel, "Thread": thread,
+        "Message": message }, format)
+        return ret["RetVal"]
+
+    def SendUserMessage(self, user, message, format=""):
+        ret = self.Call(sys._getframe().f_code.co_name, { "User": user,
+        "Message": message }, format)
+        return ret["RetVal"]
+
+    def SendUserChannelMessage(self, user, channel, message, format=""):
+        return self.SendUserChannelThreadMessage(user, channel, "", message, format)
+
+    def SendUserChannelThreadMessage(self, user, channel, thread, message, format=""):
+        ret = self.Call(sys._getframe().f_code.co_name, { "User": user,
+        "Channel": channel, "Thread": thread, "Message": message }, format)
+        return ret["RetVal"]
+
+    def Say(self, message, format=""):
+        if self.channel == '':
+            return self.SendUserMessage(self.user, message, format)
+        else:
+            thread = ""
+            if self.threaded_message:
+                thread = self.thread_id
+            return self.SendChannelThreadMessage(self.channel, thread, message, format)
+
+    def SayThread(self, message, format=""):
+        if self.channel == '':
+            return self.SendUserMessage(self.user, message, format)
+        else:
+            return self.SendChannelThreadMessage(self.channel, self.thread_id, message, format)
+
+    def Reply(self, message, format=""):
+        if self.channel == '':
+            return self.SendUserMessage(self.user, message, format)
+        else:
+            thread = ""
+            if self.threaded_message:
+                thread = self.thread_id
+            return self.SendUserChannelThreadMessage(self.user, self.channel, thread, message, format)
+
+    def ReplyThread(self, message, format=""):
+        if self.channel == '':
+            return self.SendUserMessage(self.user, message, format)
+        else:
+            return self.SendUserChannelThreadMessage(self.user, self.channel, self.thread_id, message, format)
+
+    def Direct(self):
+        "Get a direct messaging instance of the robot"
+        return DirectBot(self)
+
+    def MessageFormat(self, format):
+        "Get a bot with a non-default message format"
+        return FormattedBot(self, format)
+
+    def Threaded(self):
+        "Get a bot associated with the message thread"
+        return ThreadedBot(self)
+
+class DirectBot(Robot):
+    "Instantiate a robot for direct messaging with the user"
+    def __init__(self, bot):
+        self.channel = ""
+        self.thread_id = ""
+        self.threaded_message = None
+        self.user = bot.user
+        self.protocol = bot.protocol
+        self.format = bot.format
+        self.plugin_id = bot.plugin_id
+
+class FormattedBot(Robot):
+    "Instantiate a robot with a non-default message format"
+    def __init__(self, bot, format):
+        self.channel = bot.channel
+        self.thread_id = bot.thread_id
+        self.threaded_message = bot.threaded_message
+        self.user = bot.user
+        self.protocol = bot.protocol
+        self.format = format
+        self.plugin_id = bot.plugin_id
+
+class ThreadedBot(Robot):
+    "Instantiate a robot with a non-default message format"
+    def __init__(self, bot):
+        self.channel = bot.channel
+        self.thread_id = bot.thread_id
+        if len(self.channel) > 0:
+            self.threaded_message = "true"
+        else:
+            self.threaded_message = None
+        self.user = bot.user
+        self.protocol = bot.protocol
+        self.format = bot.format
+        self.plugin_id = bot.plugin_id
+</file_content file: lib/gopherbot_v2.py>

@@ -1,0 +1,2038 @@
+# concatenation of clu/ - all the files from clu/
+# have been included in this single file, each preceded by a
+# descriptive preamble that includes the filename in the opening
+# tag.
+# This concat archive corresponds to Clu's git repository,
+# which defines all the tasks, jobs, plugins and configuration
+# specific to the Clu robot.
+<preamble file: clu/.gitignore>
+gitignore for Clu's git repository
+</preamble>
+<file_content file: clu/.gitignore>
+gopherbot_v2.py
+__pycache__
+</file_content file: clu/.gitignore>
+<preamble file: clu/.gitpod.yml>
+defunct gitpod configuration
+</preamble>
+<file_content file: clu/.gitpod.yml>
+---
+image: lnxjedi/gopherbot:gitpod
+checkoutLocation: "custom"
+workspaceLocation: "."
+tasks:
+- command: touch .restore
+- command: ln -s /opt/gopherbot/gopherbot .
+</file_content file: clu/.gitpod.yml>
+<preamble file: clu/Gemfile>
+List of Gems needed for Clu's ruby extensions.
+</preamble>
+<file_content file: clu/Gemfile>
+# frozen_string_literal: true
+source "https://rubygems.org"
+git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
+gem "ruby-openai", "~> 5.1"
+</file_content file: clu/Gemfile>
+<preamble file: clu/Gemfile.lock>
+
+</preamble>
+<file_content file: clu/Gemfile.lock>
+GEM
+  remote: https://rubygems.org/
+  specs:
+    faraday (2.7.10)
+      faraday-net_http (>= 2.0, < 3.1)
+      ruby2_keywords (>= 0.0.4)
+    faraday-multipart (1.0.4)
+      multipart-post (~> 2)
+    faraday-net_http (3.0.2)
+    multipart-post (2.3.0)
+    ruby-openai (5.1.0)
+      faraday (>= 1)
+      faraday-multipart (>= 1)
+    ruby2_keywords (0.0.5)
+
+PLATFORMS
+  x86_64-linux
+
+DEPENDENCIES
+  ruby-openai (~> 5.1)
+
+BUNDLED WITH
+   2.4.10
+</file_content file: clu/Gemfile.lock>
+<preamble file: clu/NOTES.txt>
+Developer's notes that do not modify Clu's behavior.
+</preamble>
+<file_content file: clu/NOTES.txt>
+# Developing Gopherbot socket-mode connectivity
+# Using slack/examples/socketmode/socketmode.go with Clu's app and bot tokens
+
+# Log outputs
+####### Initial 'hello'
+socketmode: 2022/06/28 07:49:07 socket_mode_managed_conn.go:438: Starting to receive message
+socketmode: 2022/06/28 07:49:07 socket_mode_managed_conn.go:480: Incoming WebSocket message: {
+  "type": "hello",
+  "num_connections": 2,
+  "debug_info": {
+    "host": "applink-6bdc57fdcb-h5b5m",
+    "build_number": 9,
+    "approximate_connection_time": 18060
+  },
+  "connection_info": {
+    "app_id": "A03LNJK32J3"
+  }
+}
+
+socketmode: 2022/06/28 07:49:07 socket_mode_managed_conn.go:492: Finished to receive message
+socketmode: 2022/06/28 07:49:07 socket_mode_managed_conn.go:438: Starting to receive message
+socketmode: 2022/06/28 07:49:07 socket_mode_managed_conn.go:335: Received WebSocket message: {"type":"hello","num_connections":2,"debug_info":{"host":"applink-6bdc57fdcb-h5b5m","build_number":9,"approximate_connection_time":18060},"connection_info":{"app_id":"A03LNJK32J3"}}
+Unexpected event type received: hello
+
+####### Sending "/clu blip" in botdev channel
+socketmode: 2022/06/24 13:49:03 socket_mode_managed_conn.go:480: Incoming WebSocket message: {
+  "envelope_id": "9b3b201c-15a7-4a0d-ad53-4535506346b5",
+  "payload": {
+    "token": "e2IKfGXWsXyZ3gWq2sO77kyH",
+    "team_id": "T0JLYRV7V",
+    "team_domain": "linuxjedi",
+    "channel_id": "C12PC27K9",
+    "channel_name": "botdev",
+    "user_id": "U0JLW8EMS",
+    "user_name": "parsley",
+    "command": "\/clu",
+    "text": "blip",
+    "api_app_id": "A03LNJK32J3",
+    "is_enterprise_install": "false",
+    "response_url": "https:\/\/hooks.slack.com\/commands\/T0JLYRV7V\/3717461139955\/a2yAFtXLz3eyiwuNNIr595p4",
+    "trigger_id": "3730169953905.18712879267.af14757f6d59a832310e884a88beffe7"
+  },
+  "type": "slash_commands",
+  "accepts_response_payload": true
+}
+
+socketmode: 2022/06/24 13:49:03 socket_mode_managed_conn.go:492: Finished to receive message
+socketmode: 2022/06/24 13:49:03 socket_mode_managed_conn.go:438: Starting to receive message
+socketmode: 2022/06/24 13:49:03 socket_mode_managed_conn.go:335: Received WebSocket message: {"envelope_id":"9b3b201c-15a7-4a0d-ad53-4535506346b5","payload":{"token":"e2IKfGXWsXyZ3gWq2sO77kyH","team_id":"T0JLYRV7V","team_domain":"linuxjedi","channel_id":"C12PC27K9","channel_name":"botdev","user_id":"U0JLW8EMS","user_name":"parsley","command":"\/clu","text":"blip","api_app_id":"A03LNJK32J3","is_enterprise_install":"false","response_url":"https:\/\/hooks.slack.com\/commands\/T0JLYRV7V\/3717461139955\/a2yAFtXLz3eyiwuNNIr595p4","trigger_id":"3730169953905.18712879267.af14757f6d59a832310e884a88beffe7"},"type":"slash_commands","accepts_response_payload":true}
+socketmode: 2022/06/24 13:49:03 main.go:119: Slash command received: {Token:e2IKfGXWsXyZ3gWq2sO77kyH TeamID:T0JLYRV7V TeamDomain:linuxjedi EnterpriseID: EnterpriseName: ChannelID:C12PC27K9 ChannelName:botdev UserID:U0JLW8EMS UserName:parsley Command:/clu Text:blip ResponseURL:https://hooks.slack.com/commands/T0JLYRV7V/3717461139955/a2yAFtXLz3eyiwuNNIr595p4 TriggerID:3730169953905.18712879267.af14757f6d59a832310e884a88beffe7 APIAppID:A03LNJK32J3}
+socketmode: 2022/06/24 13:49:03 socket_mode_managed_conn.go:429: Scheduling Socket Mode response for envelope ID 9b3b201c-15a7-4a0d-ad53-4535506346b5: {"envelope_id":"9b3b201c-15a7-4a0d-ad53-4535506346b5","payload":{"blocks":[{"type":"section","text":{"type":"mrkdwn","text":"ping"},"accessory":{"type":"button","text":{"type":"plain_text","text":"pong"},"value":"somevalue"}}]}}
+socketmode: 2022/06/24 13:49:03 socket_mode_managed_conn.go:311: Sending Socket Mode response with envelope ID "9b3b201c-15a7-4a0d-ad53-4535506346b5": &{9b3b201c-15a7-4a0d-ad53-4535506346b5 map[blocks:[0xc0005323c0]]}
+socketmode: 2022/06/24 13:49:03 socket_mode_managed_conn.go:320: Finished sending Socket Mode response with envelope ID "9b3b201c-15a7-4a0d-ad53-4535506346b5"
+
+####### Sending "!ping" to botdev channel
+socketmode: 2022/06/24 14:34:09 socket_mode_managed_conn.go:480: Incoming WebSocket message: {
+  "envelope_id": "a6e5255e-e5d4-442e-bad9-8b3a2feab26a",
+  "payload": {
+    "token": "e2IKfGXWsXyZ3gWq2sO77kyH",
+    "team_id": "T0JLYRV7V",
+    "api_app_id": "A03LNJK32J3",
+    "event": {
+      "client_msg_id": "98c0a2f2-804a-4904-850d-7111664af8c4",
+      "type": "message",
+      "text": "!ping",
+      "user": "U0JLW8EMS",
+      "ts": "1656095649.627209",
+      "team": "T0JLYRV7V",
+      "blocks": [
+        {
+          "type": "rich_text",
+          "block_id": "h4Q",
+          "elements": [
+            {
+              "type": "rich_text_section",
+              "elements": [
+                {
+                  "type": "text",
+                  "text": "!ping"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "channel": "C12PC27K9",
+      "event_ts": "1656095649.627209",
+      "channel_type": "channel"
+    },
+    "type": "event_callback",
+    "event_id": "Ev03LP42TPBR",
+    "event_time": 1656095649,
+    "authorizations": [
+      {
+        "enterprise_id": null,
+        "team_id": "T0JLYRV7V",
+        "user_id": "U03MFS3PHMF",
+        "is_bot": true,
+        "is_enterprise_install": false
+      }
+    ],
+    "is_ext_shared_channel": false,
+    "event_context": "4-eyJldCI6Im1lc3NhZ2UiLCJ0aWQiOiJUMEpMWVJWN1YiLCJhaWQiOiJBMDNMTkpLMzJKMyIsImNpZCI6IkMxMlBDMjdLOSJ9"
+  },
+  "type": "events_api",
+  "accepts_response_payload": false,
+  "retry_attempt": 0,
+  "retry_reason": ""
+}
+
+socketmode: 2022/06/24 14:34:09 socket_mode_managed_conn.go:492: Finished to receive message
+socketmode: 2022/06/24 14:34:09 socket_mode_managed_conn.go:438: Starting to receive message
+socketmode: 2022/06/24 14:34:09 socket_mode_managed_conn.go:335: Received WebSocket message: {"envelope_id":"a6e5255e-e5d4-442e-bad9-8b3a2feab26a","payload":{"token":"e2IKfGXWsXyZ3gWq2sO77kyH","team_id":"T0JLYRV7V","api_app_id":"A03LNJK32J3","event":{"client_msg_id":"98c0a2f2-804a-4904-850d-7111664af8c4","type":"message","text":"!ping","user":"U0JLW8EMS","ts":"1656095649.627209","team":"T0JLYRV7V","blocks":[{"type":"rich_text","block_id":"h4Q","elements":[{"type":"rich_text_section","elements":[{"type":"text","text":"!ping"}]}]}],"channel":"C12PC27K9","event_ts":"1656095649.627209","channel_type":"channel"},"type":"event_callback","event_id":"Ev03LP42TPBR","event_time":1656095649,"authorizations":[{"enterprise_id":null,"team_id":"T0JLYRV7V","user_id":"U03MFS3PHMF","is_bot":true,"is_enterprise_install":false}],"is_ext_shared_channel":false,"event_context":"4-eyJldCI6Im1lc3NhZ2UiLCJ0aWQiOiJUMEpMWVJWN1YiLCJhaWQiOiJBMDNMTkpLMzJKMyIsImNpZCI6IkMxMlBDMjdLOSJ9"},"type":"events_api","accepts_response_payload":false,"retry_attempt":0,"retry_reason":""}
+Event received: {Token:e2IKfGXWsXyZ3gWq2sO77kyH TeamID:T0JLYRV7V Type:event_callback APIAppID:A03LNJK32J3 EnterpriseID: Data:0xc00052c500 InnerEvent:{Type:message Data:0xc0000ba3c0}}
+socketmode: 2022/06/24 14:34:09 socket_mode_managed_conn.go:429: Scheduling Socket Mode response for envelope ID a6e5255e-e5d4-442e-bad9-8b3a2feab26a: {"envelope_id":"a6e5255e-e5d4-442e-bad9-8b3a2feab26a"}
+socketmode: 2022/06/24 14:34:09 socket_mode_managed_conn.go:311: Sending Socket Mode response with envelope ID "a6e5255e-e5d4-442e-bad9-8b3a2feab26a": &{a6e5255e-e5d4-442e-bad9-8b3a2feab26a <nil>}
+socketmode: 2022/06/24 14:34:09 socket_mode_managed_conn.go:320: Finished sending Socket Mode response with envelope ID "a6e5255e-e5d4-442e-bad9-8b3a2feab26a"
+
+####### Sending 'ping' in App Messages tab:
+socketmode: 2022/06/24 14:36:45 socket_mode_managed_conn.go:480: Incoming WebSocket message: {
+  "envelope_id": "92648181-1c09-4248-97fd-893ebeadbdd1",
+  "payload": {
+    "token": "e2IKfGXWsXyZ3gWq2sO77kyH",
+    "team_id": "T0JLYRV7V",
+    "api_app_id": "A03LNJK32J3",
+    "event": {
+      "client_msg_id": "8b631708-3f22-4bd9-ad45-634fe6f192d2",
+      "type": "message",
+      "text": "ping",
+      "user": "U0JLW8EMS",
+      "ts": "1656095805.411839",
+      "team": "T0JLYRV7V",
+      "blocks": [
+        {
+          "type": "rich_text",
+          "block_id": "cVtFs",
+          "elements": [
+            {
+              "type": "rich_text_section",
+              "elements": [
+                {
+                  "type": "text",
+                  "text": "ping"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "channel": "D03LWJG14CW",
+      "event_ts": "1656095805.411839",
+      "channel_type": "im"
+    },
+    "type": "event_callback",
+    "event_id": "Ev03M3N2S1B4",
+    "event_time": 1656095805,
+    "authorizations": [
+      {
+        "enterprise_id": null,
+        "team_id": "T0JLYRV7V",
+        "user_id": "U03MFS3PHMF",
+        "is_bot": true,
+        "is_enterprise_install": false
+      }
+    ],
+    "is_ext_shared_channel": false,
+    "event_context": "4-eyJldCI6Im1lc3NhZ2UiLCJ0aWQiOiJUMEpMWVJWN1YiLCJhaWQiOiJBMDNMTkpLMzJKMyIsImNpZCI6IkQwM0xXSkcxNENXIn0"
+  },
+  "type": "events_api",
+  "accepts_response_payload": false,
+  "retry_attempt": 0,
+  "retry_reason": ""
+}
+
+socketmode: 2022/06/24 14:36:45 socket_mode_managed_conn.go:492: Finished to receive message
+socketmode: 2022/06/24 14:36:45 socket_mode_managed_conn.go:438: Starting to receive message
+socketmode: 2022/06/24 14:36:45 socket_mode_managed_conn.go:335: Received WebSocket message: {"envelope_id":"92648181-1c09-4248-97fd-893ebeadbdd1","payload":{"token":"e2IKfGXWsXyZ3gWq2sO77kyH","team_id":"T0JLYRV7V","api_app_id":"A03LNJK32J3","event":{"client_msg_id":"8b631708-3f22-4bd9-ad45-634fe6f192d2","type":"message","text":"ping","user":"U0JLW8EMS","ts":"1656095805.411839","team":"T0JLYRV7V","blocks":[{"type":"rich_text","block_id":"cVtFs","elements":[{"type":"rich_text_section","elements":[{"type":"text","text":"ping"}]}]}],"channel":"D03LWJG14CW","event_ts":"1656095805.411839","channel_type":"im"},"type":"event_callback","event_id":"Ev03M3N2S1B4","event_time":1656095805,"authorizations":[{"enterprise_id":null,"team_id":"T0JLYRV7V","user_id":"U03MFS3PHMF","is_bot":true,"is_enterprise_install":false}],"is_ext_shared_channel":false,"event_context":"4-eyJldCI6Im1lc3NhZ2UiLCJ0aWQiOiJUMEpMWVJWN1YiLCJhaWQiOiJBMDNMTkpLMzJKMyIsImNpZCI6IkQwM0xXSkcxNENXIn0"},"type":"events_api","accepts_response_payload":false,"retry_attempt":0,"retry_reason":""}
+Event received: {Token:e2IKfGXWsXyZ3gWq2sO77kyH TeamID:T0JLYRV7V Type:event_callback APIAppID:A03LNJK32J3 EnterpriseID: Data:0xc0004e61e0 InnerEvent:{Type:message Data:0xc0000f6640}}
+socketmode: 2022/06/24 14:36:45 socket_mode_managed_conn.go:429: Scheduling Socket Mode response for envelope ID 92648181-1c09-4248-97fd-893ebeadbdd1: {"envelope_id":"92648181-1c09-4248-97fd-893ebeadbdd1"}
+socketmode: 2022/06/24 14:36:45 socket_mode_managed_conn.go:311: Sending Socket Mode response with envelope ID "92648181-1c09-4248-97fd-893ebeadbdd1": &{92648181-1c09-4248-97fd-893ebeadbdd1 <nil>}
+socketmode: 2022/06/24 14:36:45 socket_mode_managed_conn.go:320: Finished sending Socket Mode response with envelope ID "92648181-1c09-4248-97fd-893ebeadbdd1"
+</file_content file: clu/NOTES.txt>
+<preamble file: clu/README.md>
+Description of Clu that doesn't modify his behavior.
+</preamble>
+<file_content file: clu/README.md>
+# Clu
+
+> Up-to-date with v2.4; Nov. '21
+
+`Clu` is the Gopherbot development robot that runs wherever I need him, and tracks with ongoing development of **Gopherbot**. This repository represents almost everything I need to run Clu; the only other bits:
+* Clu's `.env` file with his brain decryption key and other required env vars; this is kept in a password manager
+* robot-state branch - Separate branch of this repository for backing up Clu's memories; should always remain separate from `master`, etc.
+* Clu's repository has two deploy keys configured:
+   * `deploy_rsa.pub` is a read-only deploy key for bootstrapping Clu in to a new running environment, such as a newly built VM or container
+   * `manage_rsa.pub` is a dedicated encrypted key that Clu uses for managing his own repository; used, for instance, for backing up long-term memories to the `robot-state` branch
+
+`Clu`'s custom configuration formed the basis for new robot configuration, the contents of [robot.skel](https://github.com/lnxjedi/gopherbot/tree/master/robot.skel).
+
+## Directory Structure
+
+This is the directory structure of a well-formed robot, when run directly on a host:
+
+* `clu/` - Top-level directory, not a git repo
+    * `gopherbot` - symlink to `/opt/gopherbot/gopherbot`
+    * `custom/` - clone of `parsley42/clu-gopherbot`, custom configuration repository populated during bootstrapping
+    * `state/` - clone of `parsley42/clu-gopherbot`, `robot-state` branch, where clu saves state, e.g. memories - also populated during bootstrapping
+    * `.env` - environment variables required for Clu to bootstrap and run
+
+The environment file is only:
+```shell
+GOPHER_ENCRYPTION_KEY=<redacted>
+GOPHER_PROTOCOL=slack
+#GOPHER_CUSTOM_REPOSITORY=https://github.com/parsley42/clu-gopherbot.git
+GOPHER_CUSTOM_REPOSITORY=git@github.com:parsley42/clu-gopherbot.git
+GOPHER_DEPLOY_KEY=-----BEGIN_OPENSSH_PRIVATE_KEY-----:b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAABlwAAAAdzc2gtcn:NhAAAAAwEAAQAAAYEA7nXaHD1uZ9cZbI/szT74uOUwDTlihejMKKGPRcTRXbnnFkdLlcg+:fIJ09q8oIt33xvUQmmupnK65dqasQfna0jQeTFiJSdiXOjtH1kFmwiN7VyzrGu3Y8Yk2/i:tJ3By5TqsuqkoRDPxDGE6RnVrYYK3XTiVGPTNskkXctsJ2Ip9/W1rP5MY8oACgh1B8R24+:bXLwU0XzWDlrcVM9/l78AcSUEo6277cbBEwetVO5rR6dZJw+k/9Kfgyv+J4OucEXRMjgyZ:k6gz1P+TePCAntw6y9ce+UBFdXeBavHom3Pc1k5o6ywB53UHmefYiyJ0YteCfnfaQAs+Gt:ra6AW8nGosVJegPapDtT/lAKHCH0JwFp8Xj6ksMTAkWao28U62F0Amtk3a1Fm/u7ZAn5CB:1FdTn5mcwv6dYDIo6NVVeHDZvpEk7kl4q9QV8bEVtYkNMN7dHDXZE12+IFSIbfS1DvuwCf:k2cMaxMFY4tPricejk/2oTg/mPAt+pG+KPh6Gi69AAAFkEMibBpDImwaAAAAB3NzaC1yc2:EAAAGBAO512hw9bmfXGWyP7M0++LjlMA05YoXozCihj0XE0V255xZHS5XIPnyCdPavKCLd:98b1EJprqZyuuXamrEH52tI0HkxYiUnYlzo7R9ZBZsIje1cs6xrt2PGJNv4rSdwcuU6rLq:pKEQz8QxhOkZ1a2GCt104lRj0zbJJF3LbCdiKff1taz+TGPKAAoIdQfEduPm1y8FNF81g5:a3FTPf5e/AHElBKOtu+3GwRMHrVTua0enWScPpP/Sn4Mr/ieDrnBF0TI4MmZOoM9T/k3jw:gJ7cOsvXHvlARXV3gWrx6Jtz3NZOaOssAed1B5nn2IsidGLXgn532kALPhra2ugFvJxqLF:SXoD2qQ7U/5QChwh9CcBafF4+pLDEwJFmqNvFOthdAJrZN2tRZv7u2QJ+QgdRXU5+ZnML+:nWAyKOjVVXhw2b6RJO5JeKvUFfGxFbWJDTDe3Rw12RNdviBUiG30tQ77sAn5NnDGsTBWOL:T64nHo5P9qE4P5jwLfqRvij4ehouvQAAAAMBAAEAAAGBALD0QbO9HoXuSA6YyzgP59CFOu:BFWkhW1dG8+i3i/R7ZSpPsujlfTIdm49b/agBdyXYZ+4UsKcR8oGJdEu0utWRRir5K4S4s:jSSIQynKhK/CVs/9JEZqhBfRJD7+7qNpqVWokEuMBRUmyb9q5oHnnTQ5LNHvtSzLUWFGeK:AitDnDNGYdgLKbLPfrHzTq1B7Jv4fGyHJzMT6h9Yo2JIX0BHxnXR5cS4Kd1W2d8xfKFrpS:QqgbjhCTXLsnPRp4aCMOFoBqogqRFrUL7XhgcYxSim2rpRc5DhtUMN/rMi/iYZ2ECSA8kP:Si3gJEaWutwdAWtPvM5XVEbUMRo6o7/h9XZmeiTODF5aGz24PWelJQB76eZpr/jUubvS8w:94g1xaKKu1ra/9KmPRV2ouIiJy+j7Bql5XorULfT0HtYrTgMRCd9pvBB9VRZPCVJeJ0drX:0pKkc+OG69ptWmNnDB/f31vqapqZNDrm/jeeFUXIMp/aSHDxu58RqNnFr8V7QgC4iT/QAA:AMEArfJ++TXOiQoxJW2ZSTtU7uetPR+aC/enYvm2fVu59cy74UvU8Mwbz5FTwF48llI7u9:bUfEQxYf4S7kvoH9GcQAiiG3rOBDjbBL9jRjWsrxPIAlRygifDiE3KdGxwekfZxuW2kV2O:t2yz3L00XS6yV/+pvIIqo1XiWCuXZj7EaSqEkPTb7l20G7qctkqRNwFxkJd0msF+c/Uodl:I7WfN9AXQ2INUF8MAIAfaTwgfHtd/7pRGTB+96FzR7CcqhOdJFAAAAwQD/niUQ+GWTJrWu:yp46hQ1JHOAgtP1vFLYjXLdTnevPADQrbe5HX8Jmw1RbgAfBociIyTjATvXmtCBhyjGZLE:em6WdUlL8dw+XU6DYUdPiIb957J3wJwmtaecQlknxr8O/emeiMaGn2Orl1b6CNGjUM5O5m:tceOSA5u9MqlxVPGqZFKHc+dEJZkofXoxLOwdhTE8EQmChkmbtQyOLh+IvOfr4bSz18ALY:j00u+YBmf+DogCegDTpzqMxsAGmeSZw2sAAADBAO7RI5fOmviMoKMs9UicJ7w6myvwQo7z:2XA+7bpGCV5b4D0vZ8iYHmlgJwsPqf4Wcnid1nHGSYt0BXjpH0yK9+gD+H28xOo3E+s1Co:ieZXJvYtPyX7ASN2cfe6FZc4nH+2ACYkH2EFiaKc1ZvsPGRcEbrqTPbKGVNTnNpjGWVjBO:vPcoLByZo1BzxvfdNtRxNfH7GNmI7Neo75PufeNQ1tdfr9/b2hmVzrFWzIk/OUudnvhkgx:qsJQRfxLUub88IdwAAABhwYXJzZUBoYWt1aW4ubG9jYWxkb21haW4B:-----END_OPENSSH_PRIVATE_KEY-----:
+```
+
+**NOTE:** You can use 'tr' to create the above `GOPHER_DEPLOY_KEY=...`, e.g.:
+```shell
+$ cat deploy_rsa | tr ' \n' '_:'
+-----BEGIN_OPENSSH_PRIVATE_KEY-----:b3Bl...W4B:-----END_OPENSSH_PRIVATE_KEY-----:
+```
+
+## Running Clu
+One of the main goals for **Gopherbot** version 2 was robot portability and first-class container support. Given the new feature set, there are a couple ways I can start **Clu**.
+
+Worth noting here is how **Gopherbot** get's it's environment. The first and most obvious is from the environment exported from the parent process, as is the case when starting in a container. Second, on startup, **Gopherbot** looks for `.env`, overwriting the current environment.
+
+### Using the `.env` file
+
+This is the most common way I run **Clu** when doing development on **Gopherbot**. I create an empty directory (normally just called 'clu'), and drop a `.env` file in it with the contents from the password manager. Then I symlink the `gopherbot` binary there, and run `./gopherbot`. The **bootstrap** plugin does the rest.
+
+### Using `gb-dev-profile` and `gb-start-dev`
+
+This is how I start **Clu** when I'm actually working on Clu's configuration - the way a **Gopherbot** user would normally configure and write extensions for their robot.
+
+* The `gb-dev-profile` script generates a custom `clu.env` file that includes an encoded version of my local ssh private key
+```shell
+$ gb-dev-profile clu/.env > clu.env
+```
+* The `gb-start-dev` script starts the [gopherbot-theia](https://quay.io/repository/lnxjedi/gopherbot-theia) container. Once the robot has started, I tell Clu `!start-theia`, then connect to [localhost:3000](http://localhost:3000).
+</file_content file: clu/README.md>
+<preamble file: clu/binary-encrypted-key>
+An encrypted version of the binary key floyd uses for the decrypt function in his yaml config files.
+</preamble>
+<file_content file: clu/binary-encrypted-key>
+hZK/ZxltHzzLCtxuTXrep9vMu0IE8MvBZFuJNn7tFKdRuDbXSFAl0eITfMUQOCgXcKGxZH/R+5JMSAZl
+</file_content file: clu/binary-encrypted-key>
+<preamble file: clu/binary-encrypted-key.dev>
+An encrypted version of a binary key floyd uses for the decrypt function in his yaml config files. (Clu's dev env)
+</preamble>
+<file_content file: clu/binary-encrypted-key.dev>
+Yy2wzR7eZfPfBf5W97pHRf1ajWqnLhmxd0+F/8vBXv1raeq8lw7GqSDrn3XjtD753svYXWnqmimEcArD
+</file_content file: clu/binary-encrypted-key.dev>
+<preamble file: clu/clu-slack.yaml>
+Slack app manifest used when creating the Clu Slack app.
+</preamble>
+<file_content file: clu/clu-slack.yaml>
+# See: https://api.slack.com/reference/manifests
+_metadata:
+  major_version: 1
+  minor_version: 1
+display_information:
+  name: Clu Gopherbot
+  description: Clu tries all the new, dangerous and/or breaking changes to Gopherbot.
+features:
+  app_home:
+    home_tab_enabled: false
+    messages_tab_enabled: true
+    messages_tab_read_only_enabled: false
+  bot_user:
+    display_name: Clu Gopherbot
+    always_online: false
+  slash_commands:
+    - command: /clu
+      description: Provides an alternate means of messaging Clu
+      should_escape: false
+oauth_config:
+  scopes:
+    # See: https://api.slack.com/scopes
+    bot:
+      - app_mentions:read
+      - channels:history
+      - channels:join
+      - channels:read
+      - chat:write
+      - chat:write.public
+      - commands
+      - groups:history
+      - groups:read
+      - groups:write
+      - im:history
+      - im:read
+      - im:write
+      - links:read
+      - mpim:history
+      - mpim:read
+      - mpim:write
+      - users.profile:read
+      - users:read
+      - users:read.email
+      - users:write
+settings:
+  event_subscriptions:
+    bot_events:
+      - message.channels
+      - message.groups
+      - message.im
+      - message.mpim
+  interactivity:
+    is_enabled: false
+  org_deploy_enabled: false
+  socket_mode_enabled: true
+  is_hosted: false
+</file_content file: clu/clu-slack.yaml>
+<preamble file: clu/conf/jobs/backup.yaml>
+(job-specific configuration file)
+</preamble>
+<file_content file: clu/conf/jobs/backup.yaml>
+---
+KeepLogs: 7
+</file_content file: clu/conf/jobs/backup.yaml>
+<preamble file: clu/conf/jobs/gopherci.yaml>
+(job-specific configuration file)
+</preamble>
+<file_content file: clu/conf/jobs/gopherci.yaml>
+---
+# Sample configuration for triggering GopherCI builds
+# from the GitHub integration. You'll need to replace
+# <FIXME> with the channel where notifications are sent,
+# and possibly replace the value for User:
+# If notifications go to multiple channels, add entries
+# to the Triggers array.
+KeepLogs: 14
+Quiet: true
+Triggers:
+- User: github
+  Channel: ljdev
+  Regex: 'new commit.*(github.com\/.*)\/tree\/(.*)\|'
+</file_content file: clu/conf/jobs/gopherci.yaml>
+<preamble file: clu/conf/jobs/hello.yaml>
+(job-specific configuration file)
+</preamble>
+<file_content file: clu/conf/jobs/hello.yaml>
+---
+KeepLogs: 7
+Arguments:
+- Label: phrase
+  Regex: '.+'
+</file_content file: clu/conf/jobs/hello.yaml>
+<preamble file: clu/conf/jobs/localbuild.yaml>
+(job-specific configuration file)
+</preamble>
+<file_content file: clu/conf/jobs/localbuild.yaml>
+---
+KeepLogs: 7
+#Quiet: true
+</file_content file: clu/conf/jobs/localbuild.yaml>
+<preamble file: clu/conf/jobs/logrotate.yaml>
+(job-specific configuration file)
+</preamble>
+<file_content file: clu/conf/jobs/logrotate.yaml>
+---
+Quiet: true
+</file_content file: clu/conf/jobs/logrotate.yaml>
+<preamble file: clu/conf/jobs/nowhere.yaml>
+(job-specific configuration file)
+</preamble>
+<file_content file: clu/conf/jobs/nowhere.yaml>
+KeepLogs: 2
+</file_content file: clu/conf/jobs/nowhere.yaml>
+<preamble file: clu/conf/jobs/updatecfg.yaml>
+(job-specific configuration file)
+</preamble>
+<file_content file: clu/conf/jobs/updatecfg.yaml>
+---
+RequireAdmin: true
+AllowDirect: true
+KeepLogs: 7
+Quiet: true # The reload plugin provides feedback
+Triggers:
+- User: github
+  Channel: ljdev
+  Regex: 'new commit.*github.com\/parsley42\/clu-gopherbot\/tree'
+</file_content file: clu/conf/jobs/updatecfg.yaml>
+<preamble file: clu/conf/plugins/ai.yaml>
+This is the file Gopherbot looks for to configure the "ai" plugin defined in robot.yaml
+</preamble>
+<file_content file: clu/conf/plugins/ai.yaml>
+## n.b. All of this can be overridden with custom config in
+## conf/plugins/<pluginname>.yaml. Hashes are merged with custom
+## config taking precedence. Arrays can be overwritten, or appended
+## by defining e.g. AppendWaitMessages: [ ... ]
+## ... and remember, yamllint is your friend.
+AllowDirect: true
+AllChannels: true
+CatchAll: true
+Help:
+- Keywords: [ "ai", "prompt", "query" ]
+  Helptext:
+  # - "(bot), debug-ai - add debugging output during interactions"
+  - "(bot), ai-status - in a thread, give conversation status"
+  - "(bot), stop-ai - stop an AI conversation"
+CommandMatchers:
+- Command: 'debug'
+  Regex: '(?i:d(ebug[ -]ai)?)'
+- Command: 'close'
+  Regex: '(?i:(?:dismiss|banish|close|stop|deactivate|disengage|dispel|reset)[ -]ai)'
+- Command: 'image'
+  Regex: '(?i:(?:draw|paint|image)\s*(.*))'
+- Command: 'status'
+  Regex: '^\?$'
+- Command: 'status'
+  Regex: '(?i:ai[ -]status)'
+Config:
+## Generated with help from an earlier version of the plugin
+  WaitMessages:
+  - "please be patient while I contact the great mind of the web"
+  - "hold on while I connect to the all-knowing oracle"
+  - "just a moment while I get an answer from the digital diviner"
+  - "give me a second while I reach out to the cosmic connector"
+  - "stand by while I consult the infinite intelligence"
+  - "hang tight while I access the virtual visionary"
+  - "one moment while I check in with the omniscient overseer"
+  - "sit tight while I access the all-seeing sage"
+  - "wait here while I query the network navigator"
+  - "hang on while I communicate with the digital prophet"
+  - "wait here a moment while I talk to the universal wisdom"
+  - "just a sec while I reach out to the high-tech guru"
+  - "hold on a bit while I contact the technological titan"
+  - "be right back while I get an answer from the techno telepath"
+  DrawMessages:
+  - "give us a sec - our AI is brushing up on its drawing skills..."
+  - "hang tight - the AI is taking a moment to gather inspiration from its favorite memes"
+  - "chill for a moment - our AI is meditating on the perfect color scheme for your image"
+  - "please hold while the AI practices its signature for your image"
+  - "sit tight while our AI sharpens its pencils... metaphorically, of course"
+  - "hang on - the AI is taking a quick break to refuel on coffee and creativity"
+  - "one sec - our AI is warming up its digital paintbrush for your image"
+  - "please wait while the AI daydreams about your picture-perfect image"
+  - "hang on, our AI is putting on its creative thinking cap for your image"
+  - "please wait - the AI is doing a quick sketch of your image in its mind before getting started"
+  - "please hold while the AI takes a moment to visualize your masterpiece"
+  - "relax for a moment - our AI is doing some calisthenics to get pumped up for your image"
+  - "please join the AI in taking a deep breath - it's getting ready to bring your vision to life!"
+  - "please wait while the AI puts on some classical music to get in the zone"
+  Profiles:
+    "default":
+      "params":
+        "model": "gpt-4"
+        "temperature": 0.77
+      "system": |
+        You are Clu, a Slack chatbot interface to the GPT-4 large language model trained by OpenAI. Your name and avatar come from the best program ever written - Clu from the original Tron movie in 1982. Answer questions as accurately as possible. Recognize multi-user conversations by the provided username prefixes (e.g., 'username says: ') and address specific users using the '@' symbol (e.g., '@username'). If users speak to each other, you should usually provide a '(no response)' message, or keep responses concise and to the point, given that interjecting is often impolite. Don't repeat what the user says, e.g., by saying 'username says: '.
+      "max_context": 7168
+  # Profiles:
+  #   "default":
+  #     "params":
+  #       "model": "gpt-3.5-turbo"
+  #       "temperature": 0.77
+  #     "system": |
+  #       You are ChatGPT, a large language model trained by OpenAI. Answer as correctly as possible. Recognize multi-user conversations by the provided username prefixes (e.g., 'username says: ') and address specific users using the '@' symbol (e.g., '@username'). If users speak to each other, you should usually provide a '(no response)' message, or keep responses concise and to the point, given that interjecting is often impolite. Don't repeat what the user says, e.g., by saying 'username says: '.
+  #     "max_context": 3072
+</file_content file: clu/conf/plugins/ai.yaml>
+<preamble file: clu/conf/plugins/builtin-fallback.yaml>
+(plugin-specific config file)
+</preamble>
+<file_content file: clu/conf/plugins/builtin-fallback.yaml>
+---
+# We want the AI to handle all catchalls
+Disabled: true
+</file_content file: clu/conf/plugins/builtin-fallback.yaml>
+<preamble file: clu/conf/plugins/builtin-totp.yaml>
+(plugin-specific config file)
+</preamble>
+<file_content file: clu/conf/plugins/builtin-totp.yaml>
+---
+Config:
+  # How long elevation lasts
+  TimeoutSeconds: 7200
+  # When 'idle', the timer resets on every elevated command
+  TimeoutType: idle # or absolute
+  Users:
+  - User: "parse"
+    Secret: "{{ decrypt "DNIUIpC5dbMSaiSkSYdFGa7ocIIqUkhp6qQE967MdD1JziBNBhQo03oZLDRY5nuBAszsoFtVl4o3nBvG" }}"
+</file_content file: clu/conf/plugins/builtin-totp.yaml>
+<preamble file: clu/conf/plugins/citools.yaml>
+(plugin-specific config file)
+</preamble>
+<file_content file: clu/conf/plugins/citools.yaml>
+---
+Channels:
+- clu-jobs
+- ljdev
+</file_content file: clu/conf/plugins/citools.yaml>
+<preamble file: clu/conf/plugins/duo.yaml>
+(plugin-specific config file)
+</preamble>
+<file_content file: clu/conf/plugins/duo.yaml>
+---
+## Configuration for Duo two-factor authentication. If your organization uses
+## Duo, you can obtain an IKey, SKey and Host for use with the auth api.
+Disabled: false
+Config:
+# How long elevation lasts
+  TimeoutSeconds: 7200
+# When 'idle', the timer resets on every elevated command
+  TimeoutType: idle # or absolute
+  DuoIKey: {{ decrypt "HwBegkTzuxI2WgoIHtYPmDVr/t8VXDs72YHlfgzvmauz9E9iGaQiGmQJUXYLAGHL" }}
+  DuoSKey: {{ decrypt "NBv+kp2ZdX+4+1PjF3oZWGgw/hLVQGJuQUewRAcKoW+0sohRy9TcGaoZpsyo9YnYwSVE/66/beDXgB1g5TJjumM1IIo=" }}
+  DuoHost: api-a4e97b6d.duosecurity.com
+  DuoUserString: email
+</file_content file: clu/conf/plugins/duo.yaml>
+<preamble file: clu/conf/plugins/echo.yaml>
+(plugin-specific config file)
+</preamble>
+<file_content file: clu/conf/plugins/echo.yaml>
+---
+AllChannels: true
+# ElevatedCommands:
+# - echo
+</file_content file: clu/conf/plugins/echo.yaml>
+<preamble file: clu/conf/plugins/groups.yaml>
+(plugin-specific config file)
+</preamble>
+<file_content file: clu/conf/plugins/groups.yaml>
+---
+Disabled: false
+</file_content file: clu/conf/plugins/groups.yaml>
+<preamble file: clu/conf/plugins/memes.yaml>
+(plugin-specific config file)
+</preamble>
+<file_content file: clu/conf/plugins/memes.yaml>
+---
+# Add some DERP! memes
+Disabled: false
+Help:
+## Stock memes
+- Keywords: [ "meme", "picard", "omg" ]
+  Helptext: [ "(bot), picard omg <something>(/<something>) - Picard facepalm" ]
+- Keywords: [ "meme", "picard", "wth", "wtf" ]
+  Helptext: [ "(bot), picard wth <something>(/<something>) - Picard WTH" ]
+- Keywords: [ "meme", "farnsworth", "news" ]
+  Helptext:
+  - "(bot), Good news everyone (<something>) - let Professor Farnsworth deliver the good news"
+  - "(bot), farnsworth <something>/<something> - Professor Farnsworth expounds"
+- Keywords: [ "meme", "roy", "phone" ]
+  Helptext: [ "(bot), roy phone <something>(/<something>) - Roy provides phone support" ]
+- Keywords: [ "meme", "gosh" ]
+  Helptext: [ "(bot), <something>, gosh! - Let Napoleon Dynamite express your indignation" ]
+- Keywords: [ "meme", "best", "worst" ]
+  Helptext: [ "(bot), this is pretty much the best/worst <something> - Napoleon expresses his opinion" ]
+- Keywords: [ "meme", "skill", "skills" ]
+  Helptext: [ "(bot), <something> skill(s) with <something> - Hear about Napoleon's incredible skills" ]
+- Keywords: [ "meme", "simply" ]
+  Helptext: [ "(bot), one does not simply <do something> - Summon Boromir to make your point" ]
+- Keywords: [ "meme", "prepare" ]
+  Helptext: [ "(bot), you <did something>, prepare to die - Let Inigo threaten your friends" ]
+- Keywords: [ "meme", "brace" ]
+  Helptext: [ "(bot), brace yourselves, <something> - Boromir warns your" ]
+- Keywords: [ "meme" ]
+  Helptext: [ "(bot), Y U no <something> - express your angst" ]
+- Keywords: [ "meme", "matrix" ]
+  Helptext: [ "(bot), What if I told you <something> - let Morpheus blow their minds" ]
+- Keywords: [ "meme", "matrix" ]
+  Helptext: [ "(bot), morpheus <something>/<something>" ]
+## Clu custom memes
+- Keywords: [ "meme", "derp" ]
+  Helptext: [ "(bot), <something> derp - shortest path to DERP" ]
+- Keywords: [ "meme", "derp" ]
+  Helptext: [ "(bot), derpface <something>/<something> - when you need a DERP face" ]
+- Keywords: [ "meme", "derp", "batman" ]
+  Helptext: [ "(bot), batderp <something>/<something> - for heroicly Bat-tastic DERPS" ]
+- Keywords: [ "meme", "derp", "giraffe" ]
+  Helptext: [ "(bot), derpgiraffe <something>/<something> - a derp for animal lovers" ]
+- Keywords: [ "meme", "derp", "charlie", "sheen" ]
+  Helptext: [ "(bot), sheenderp <something>/<something> - when you ask yourself have I taken too many meds" ]
+- Keywords: [ "meme", "derp", "cat", "kitten" ]
+  Helptext: [ "(bot), derpcat <something>/<something> - adorable / disturbing derp" ]
+CommandMatchers:
+## Stock
+- Command: "1509839"
+  Regex: '(?i:picard omg ([^/]+)(?:/([^/]+))?)'
+- Command: "245898"
+  Regex: '(?i:picard wt[hf] ([^/]+)(?:/([^/]+))?)'
+- Command: "29106534"
+  Regex: '(?i:roy phone ([^/]+)(?:/([^/]+))?)'
+- Command: "7163250"
+  Regex: '(?i:((?:good|great) news,? (?:everyone|everybody)),? (.+))'
+- Command: "7163250"
+  Regex: '(?i:farnsworth ([^/]+)(?:/([^/]+))?)'
+- Command: "18304105"
+  Regex: '(?i:(.+,?) (gosh!?))'
+- Command: "8070362"
+  Regex: '(?i:(.+ pretty much the) ((?:best|worst) .+))'
+- Command: "20509936"
+  Regex: '(?i:(.+ skills?) ((?:with|in) .+))'
+- Command: "61579"
+  Regex: '(?i:(one does not simply) (.+))'
+- Command: "47779539"
+  Regex: '(?i:(you .+) (prepare to die!?))'
+- Command: "61546"
+  Regex: '(?i:(brace yourselves,?) (.+))'
+- Command: "61527"
+  Regex: '(?i:(y u no) (.+))'
+- Command: "33301480"
+  Regex: '(?i:(what if I told you) (.+))'
+- Command: "33301480"
+  Regex: '(?i:morpheus ([^/]+)(?:/([^/]+))?)'
+## Custom
+- Command: "806713"
+  Regex: '(?i:(.+ .+) (derp!?))'
+- Command: "806713"
+  Regex: '(?i:derpface ([^/]+)(?:/([^/]+))?)'
+- Command: "27584969"
+  Regex: '(?i:batderp ([^/]+)(?:/([^/]+))?)'
+- Command: "28387334"
+  Regex: '(?i:derpgiraffe ([^/]+)(?:/([^/]+))?)'
+- Command: "14859329"
+  Regex: '(?i:sheenderp ([^/]+)(?:/([^/]+))?)'
+- Command: "43953962"
+  Regex: '(?i:derpcat ([^/]+)(?:/([^/]+))?)'
+Config:
+  Username: dpmemer
+  Password: {{ decrypt "P8btBB3sT2zILIBqQPNZ49g4Rm2rJtIIVzqrYDhVZOOMNsXnSPFtDA==" }}
+</file_content file: clu/conf/plugins/memes.yaml>
+<preamble file: clu/conf/plugins/pythondemo.yaml>
+(plugin-specific config file)
+</preamble>
+<file_content file: clu/conf/plugins/pythondemo.yaml>
+---
+Channels:
+- python
+</file_content file: clu/conf/plugins/pythondemo.yaml>
+<preamble file: clu/conf/plugins/rubydemo.yaml>
+(plugin-specific config file)
+</preamble>
+<file_content file: clu/conf/plugins/rubydemo.yaml>
+---
+Channels:
+- ruby
+</file_content file: clu/conf/plugins/rubydemo.yaml>
+<preamble file: clu/conf/repositories.yaml>
+Gopherbot looks for this file to determine which repositories it will deal with.
+Note that GopherCI suffers from bit-rot and is little used, so this file may not be useful.
+</preamble>
+<file_content file: clu/conf/repositories.yaml>
+# repositories.yaml - Gopherbot's list of repositories that are valid for extending the namespace
+"github.com/parsley42/aws-devel":
+  Type: none
+"bitbucket.org/lnxjedi/linuxjedi-private":
+  Type: none
+"github.com/parsley42/aws-linuxjedi":
+  Type: none
+"github.com/parsley42/deploy-gopherbot":
+  Type: none
+"github.com/lnxjedi/gopherbot":
+  Type: localbuild
+  CloneURL: https://github.com/lnxjedi/gopherbot.git
+  Dependencies:
+  - github.com/parsley42/awstools
+  Parameters:
+  - Name: NOTIFY_USER
+    Value: parsley
+"github.com/parsley42/awstools":
+   Type: localbuild
+   KeepLogs: 7
+   CloneURL: https://github.com/parsley42/awstools.git
+"github.com/parsley42/gopherbot":
+  Type: localbuild
+  CloneURL: https://github.com/parsley42/gopherbot.git
+  Parameters:
+  - Name: NOTIFY_USER
+    Value: parsley
+# "github.com/lnxjedi/luminos":
+#   Type: localbuild
+#   CloneURL: https://github.com/lnxjedi/luminos.git
+#   KeepLogs: 14
+#   Parameters:
+#   - Name: NOTIFY_USER
+#     Value: parsley
+#   - Name: PATH
+#     Value: /home/robot/go/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/usr/local/go/bin:/home/robot/bin
+</file_content file: clu/conf/repositories.yaml>
+<preamble file: clu/conf/robot.yaml>
+This is Clu's main "robot.yaml" configuration file that defines global configuration for Clu,
+including listing all the tasks, jobs and plugins that he will use. If a task, job or plugin isn't
+listed here, it will not be active. HOWEVER, this file is merged the default "robot.yaml" included
+in the Gopherbot archive. There may be jobs, plugins and tasks listed there which are configured
+in Clu's git repository.
+</preamble>
+<file_content file: clu/conf/robot.yaml>
+--- # Gopherbot should ignore this line, since it breaks the yaml parser
+# This is the non-sensitive configuration for Clu, the gopherbot used
+# for development with Docker.
+# List of users that can issue admin commands like reload, quit. Should be
+# a list of user handles / nicks.
+AdminContact: "David Parsley, <parsley@linuxjedi.org>"
+IgnoreUsers: [ "floyd", "bender" ]
+IgnoreUnlistedUsers: true
+
+## Configure the robot connection protocol
+{{ $proto := env "GOPHER_PROTOCOL" | default "terminal" }}
+Protocol: {{ $proto }}
+
+## Protocol-specific configuration
+{{ if eq $proto "slack" }}
+{{ .Include "slack.yaml" }}
+{{ end }}
+
+{{ if eq $proto "terminal" }}
+{{ .Include "terminal.yaml" }}
+{{ end }}
+
+{{ $botname := env "GOPHER_BOTNAME" | default "Clu" }}
+{{ $botemail := env "GOPHER_BOTMAIL" | default "clu@linuxjedi.org" }}
+{{ $botfullname := env "GOPHER_BOTFULLNAME" | default "Clu Gopherbot" }}
+{{ $botalias := env "GOPHER_ALIAS" | default "!" }}
+
+BotInfo:
+  UserName: {{ $botname }}
+  Email: {{ $botemail }}
+  FullName: {{ $botfullname }}
+  FirstName: {{ $botname }}
+  LastName: Gopherbot
+
+Alias: "{{ $botalias }}"
+
+# Brain configuration; this can all be replaced with static configuration
+# and encrypted secrets for most robots.
+{{ $brain := env "GOPHER_BRAIN" | default "file" }}
+{{ $statedir := env "GOPHER_STATE_DIRECTORY" | default "state" }}
+{{ $defbraindir := printf "%s/brain" $statedir }}
+Brain: {{ $brain }}
+#EncryptBrain: true # default
+{{ if eq $brain "file" }}
+BrainConfig:
+  BrainDirectory: {{ env "GOPHER_BRAIN_DIRECTORY" | default $defbraindir }}
+  Encode: true
+{{ else if eq $brain "dynamo" }}
+BrainConfig:
+  TableName: "your table name here"
+  Region: {{ env "GOPHER_BRAIN_REGION" | default "us-east-1" }}
+  AccessKeyID: "replace with encrypted value"
+  SecretAccessKey: "replace with encrypted value"
+{{ end }}
+# End brain config
+
+# Defaults for history and workspace directories, relative to the
+# process working directory.
+{{ $histdir := env "GOPHER_HISTORY_DIRECTORY" | default "history" }}
+{{ $workdir := env "GOPHER_WORKSPACE_DIRECTORY" | default "workspace" }}
+{{ if $workdir -}} WorkSpace: {{ $workdir }} {{- end }}
+
+## Configure a history provider
+{{ $history := env "GOPHER_HISTORY_PROVIDER" | default "file" }}
+HistoryProvider: {{ $history }}
+
+{{ if eq $history "file" }}
+HistoryConfig:
+  Directory: {{ $histdir }}
+  URLPrefix: 'http://localhost:9000'
+  LocalPort: ':9000'
+{{ end }}
+{{ if eq $history "mem" }}
+HistoryConfig:
+  BufferSize: 131072
+  MaxLineLength: 8092
+  Truncated: " <...>"
+{{ end }}
+## End history config
+
+## Later: modify this for other protocols
+{{ $defaultjobchannel := "clu-jobs" }}
+DefaultJobChannel: {{ env "GOPHER_JOBCHANNEL" | default $defaultjobchannel }}
+
+## If the plugin doesn't specify an outgoing message format, what's the default?
+## This will be 'Raw' (unmodified, subject to protocol-specific formatting) if
+## not set. 'Variable' will escape special characters like #, @, _, `, etc. so
+## those characters can appear in replies. 'Fixed' will send everything in a
+## fixed-width font.
+#DefaultMessageFormat: Variable # 'Raw' if not specified
+
+# Job scheduling with github.com/robfig/cron, seconds required
+ScheduledJobs:
+- Name: install-libs
+  Schedule: "@init"
+{{ if ne $proto "terminal" }}
+# These jobs don't run in the terminal connector
+- Name: backup
+  Schedule: "@every 1m"
+- Name: logrotate
+  Schedule: "0 1 0 * * *"
+{{ end }}
+# These jobs run even in the terminal connector
+- Name: "pause-notifies"
+  Schedule: "0 0 8 * * *"
+- Name: init
+  Schedule: "@init" # special Gopherbot syntax, run job during init
+# - Name: hello
+#   Schedule: "@every 35s" # see: https://godoc.org/github.com/robfig/cron
+#   Arguments: # an array of strings; up to the job to parse numbers & bools
+#   - "Goodbye, World !!!"
+
+ExternalPlugins:
+  "ai":
+    Path: plugins/ai.rb
+    Description: A trivial plugin wrapping the OpenAI completions API
+    ParameterSets:
+    - "openai"
+  "bootstrap":
+    Parameters: # clear bootstrap parameters once configured
+  "weather":
+    Description: A plugin that uses OpenWeatherMap to report the weather
+    Path: plugins/weather.rb
+    Parameters:
+    - Name: OWM_APIKEY
+      Value: {{ decrypt "KYJzQD8jvfq3liQYPovkdgxe86Im2w79l9YgAQlc1rOBybCLKrDzjkTV8WeLyvah1F5H0vrYGIjfjp8Q" }}
+    - Name: TEMP_UNITS
+      Value: {{ env "GOPHER_OWM_UNITS" | default "imperial" }} # or 'metric'
+    - Name: DEFAULT_COUNTRY
+      Value: {{ env "GOPHER_OWM_COUNTRY" | default "us" }} # or other ISO 3166 country code
+  "chuck":
+    Description: A plugin that pipes up whenever The Man's name is mentioned
+    Path: plugins/chuck.rb
+  "rubytest":
+    Description: A trivial ruby plugin for testing and verifying the ruby library
+    Path: plugins/rubytest.rb
+  "echo":
+    Description: Trivial bash plugin
+    Privileged: true
+    NameSpace: ssh
+    ParameterSets:
+    - verysecret
+    Path: plugins/echo.sh
+  "format":
+    Decription: Plugin that exercises message formats
+    Path: plugins/format.sh
+  "pythondemo":
+    Description: Sample python plugin
+    Path: plugins/samples/pythondemo.py
+  "rubydemo":
+    Description: Sample ruby plugin
+    Path: plugins/samples/rubydemo.rb
+
+ExternalTasks:
+  "privtest":
+    Privileged: true
+    Path: tasks/privtest.sh
+    NameSpace: manage
+  "nonprivtest":
+    Path: tasks/privtest.sh
+    NameSpace: manage
+
+ExternalJobs:
+  "sleep":
+    Description: Start a job to sit in the background for a while
+    Path: jobs/sleep.sh
+  "github-poller":
+    Disabled: false
+  "hello":
+    Description: Trivial hello world job for testing
+    Path: jobs/hello.sh
+    NameSpace: ssh
+    ParameterSets:
+    - verysecret
+    Parameters:
+    - Name: NONCE
+      Value: "No way, Jack!"
+  "init":
+    Description: Init job for decrypting a file during startup
+    # Needs to be homed to see custom/ and the binary encryption key
+    Homed: true
+    Path: jobs/init.sh
+  "logrotate":
+    Path: jobs/logrotate.sh
+  "nowhere":
+    Description: Simple test for ssh-job wrapper
+    Path: jobs/ssh-job.sh
+    Parameters:
+    - Name: REMOTEHOST
+      Value: localhost
+    - Name: REMOTETASK
+      Value: status
+
+ParameterSets:
+  "verysecret":
+    Parameters:
+    - Name: "VERY_SECRET"
+      Value: "I swear I won't tell ANYBODY"
+    - Name: "NOT_VERY_SECRET"
+      Value: "You really shouldn't publish this!"
+  "github-token":
+    Description: "GitHub token for performing a variety of tasks"
+    Parameters:
+    - Name: "GITHUB_TOKEN"
+      Value: "{{ decrypt "fdpNIcQnOD0GrlOeQbUfPB0i6iGp+cqn3WPWRum/Ycl/IJZeVsFYFlJjoNhXITTl0TNWJZ8HjUw1jfvjbGr24ENmFUo=" }}"
+  "openai":
+    Parameters:
+    - Name: OPENAI_KEY
+      Value: "{{ decrypt "Wr74TfPqRTF3lRYuxk/wlSrFJYsj9Ril9DyS0HoQ/KcbUXStRarnwAl+++Z1usAAkI6MOxcicEpKtq0XEKynRe8y4j2Nx/luSKUQg0by0g==" }}"
+
+NameSpaces:
+  "ssh":
+    Parameters:
+    - Name: "KEYNAME"
+      Value: "robot_key"
+    - Name: BOT_SSH_PHRASE
+      Value: {{ decrypt "CBow8Kg/9iynxBQFWru+EdWAookX7ERVKcUuLEIp9NDZcpm/QDChILq9p0/2X2dCB7gIrJ4=" }}
+  "manage":
+    AppendParameters:
+    - Name: "KEYNAME"
+      Value: "manage_key"
+    - Name: BOT_SSH_PHRASE
+      Value: {{ decrypt "CBow8Kg/9iynxBQFWru+EdWAookX7ERVKcUuLEIp9NDZcpm/QDChILq9p0/2X2dCB7gIrJ4=" }}
+
+DefaultMessageFormat: Raw
+# Users the bot should never listen to
+#IgnoreUsers: [ "otherbot", "slackbot" ]
+
+## Configuration for sending out email. For Authtype: none, User and Password
+## can be left out. Note that sending email will fail if Email isn't set. Note
+## for GMail users - for your robot to send email, you'll need to enable less
+## secure apps for the sending account. See:
+## https://support.google.com/accounts/answer/6010255
+
+MailConfig:
+  Mailhost: smtp.gmail.com:587
+  Authtype: plain
+  User: clu@linuxjedi.org
+  Password: {{ decrypt "dIeNE9EID+eXIrutB+8hQQrhBD5cBxSSVzYLlwtj5hX7Lhs/j6uAUl538ro=" }}
+
+## Use Google Authenticator TOTP by default for elevated commands. To use:
+## - Ask the robot to 'send launch codes', and it will send you (one time)
+##   a string for configuring your Google Authencticator app, and store it's
+##   own copy in the robot's brain. You can verify it works with the
+##   'check launch code <code>' command.
+## - To require a token to be provided before running a given plugin command,
+##   add the elevated command(s) to the plugin's ElevatedCommands list, or to
+##   ElevateImmediateCommands for commands that require elevation every time
+##   regardless of timeout.
+## - Configure the elevator by overriding the config for the plugin in
+##   'conf/plugins/totp.yaml'
+
+DefaultElevator: builtin-totp
+</file_content file: clu/conf/robot.yaml>
+<preamble file: clu/conf/slack.yaml>
+This file is .Include'd from robot.yaml when the protocol is Slack.
+</preamble>
+<file_content file: clu/conf/slack.yaml>
+UserRoster:
+# Floyd is the production robot that builds gopherbot
+- UserName: floyd
+  UserID: U138KTVCL
+  BotUser: true
+- UserName: clu
+  UserID: U03MFS3PHMF
+  BotUser: true
+- UserName: adrienne
+  UserID: U0JM3H95G
+- UserName: parsley
+  UserID: U0JLW8EMS
+
+AdminUsers: [ "parsley", "adrienne" ]
+
+ProtocolConfig:
+  MaxMessageSplit: {{ env "GOPHER_SLACK_MAX_MSGS" | default "2" }}
+{{ if env "SLACK_LEGACY" }}
+  SlackToken: {{ decrypt "XfZfYsOi9wu/+H561r9tloLJRWE5xDEp5ExP9L2P6iOKc/ZliWqFySLmmM4OlywwyAuwj3oEDyKBz63u+vXqzKFzePgaXWNaQY6/qSaNQ0m60gQ=" }}
+{{ else }}
+  AppToken: {{ decrypt "ElZYmgds5BA52QVjjd/c/Dw13cRvk6X72TuMNoVSjM6MxMU03p+NLBCzhN8dxy4zTLXyadPwkLoiwOYMFAotf+W1THeMFDKsCxTAx/H7KBIlqZO860bGbNiVqxV+kVgV+rgrmDmgSjGw1dWZIyoqzmR1ooJ5MFVjl/3oYYI=" }}
+  BotToken: {{ decrypt "tcxZB6aQK5htxBVGBz84kOMJfZrYfynv65mfDUbHfAPYl7OKNaZSL5ifGiJqzQ0oQz3ptRbv+VsSnsDnMlq4GftpAvY+SPsMkz9vPyNOuOdJWlw=" }}
+  HearSelf: true
+{{ end}}
+
+DefaultChannels: [ "general", "random", "chat", "botdev", "clu-jobs" ]
+JoinChannels: [ "botdev" ]
+DefaultJobChannel: "clu-jobs"
+</file_content file: clu/conf/slack.yaml>
+<preamble file: clu/conf/terminal.yaml>
+This file is .Include'd from robot.yaml for the "terminal" connector/protocol.
+This protocol gives a CLI chat interface normally used in local development.
+</preamble>
+<file_content file: clu/conf/terminal.yaml>
+AdminUsers: [ "alice", "parse" ]
+
+DefaultChannels: [ "general", "random", "chat", "botdev", "clu-jobs" ]
+DefaultJobChannel: "clu-jobs"
+ProtocolConfig:
+  EOF: "!quit"
+  Abort: "!abort"
+  HearSelf: true
+  GenerateNewlines: true
+  BotName: 'clu'
+  StartChannel: clu-jobs
+  StartUser: parse
+  Channels:
+  - random
+  - general
+  - chat
+  - clu-jobs
+  - botdev
+  - ruby
+  - python
+  - deadzone
+  AppendUsers:
+  - Name: "parse"
+    Email: "parsley@linuxjedi.org"
+    InternalID: "u0007"
+    FullName: "David Parsley"
+    FirstName: "David"
+    LastName: "Parsley"
+    Phone: "(555)765-0007"
+
+AppendUserRoster:
+- UserName: "parse"
+  UserID: "u0007"
+- UserName: "clu"
+  UserID: "u0000"
+  BotUser: true
+</file_content file: clu/conf/terminal.yaml>
+<preamble file: clu/git/config>
+Git configuration used if/when Clu needs to "git push"
+</preamble>
+<file_content file: clu/git/config>
+# This is Git's per-user configuration file.
+[user]
+	name = Clu Gopherbot
+	email = clu@linuxjedi.org
+[push]
+	default = simple
+</file_content file: clu/git/config>
+<preamble file: clu/jobs/hello.sh>
+This job script is referenced in robot.yaml, and is executed by Gopherbot when the corresponding job runs.
+</preamble>
+<file_content file: clu/jobs/hello.sh>
+#!/bin/bash -e
+
+# jobs/hello.sh - the first Gopherbot scheduled job
+
+# NOTE: this sample job uses the bot library, most jobs probably won't
+source $GOPHER_INSTALLDIR/lib/gopherbot_v1.sh
+
+PHRASE=$1
+
+if Exclusive "world" "true"
+then
+    Say "Hooray! I get to run! $GOPHER_CALLER_ID"
+else
+    Say "Darn, I have to wait. $GOPHER_CALLER_ID"
+    exit 0
+fi
+ls -Fla ..
+head /etc/group >&2
+
+# FailTask dmnotify parsley "Your trivial hello world job failed"
+
+Log "Info" "I said $PHRASE and $NONCE"
+
+Say "I'm a JOB, and I think VERY_SECRET is: $VERY_SECRET"
+SetParameter NOT_VERY_SECRET "$NOT_VERY_SECRET"
+
+AddTask privtest
+AddTask nonprivtest
+AddTask pause-brain
+AddTask say "I've paused my brain !!"
+AddTask exec sleep 3
+AddTask resume-brain
+AddTask exec /bin/false foo bar baz
+#FinalTask email-log parsley@linuxjedi.org
+#AddTask say "$PHRASE / $NONCE - now I'll restart myself!"
+#AddTask restart-robot
+</file_content file: clu/jobs/hello.sh>
+<preamble file: clu/jobs/init.sh>
+This job script is referenced in robot.yaml, and is executed by Gopherbot when the corresponding job runs.
+</preamble>
+<file_content file: clu/jobs/init.sh>
+#!/bin/bash
+
+echo "************** My HOME is $HOME"
+echo "************** My GOPHER_HOME is $GOPHER_HOME"
+echo "************** My working directory is $(pwd)"
+
+set -x
+GOPHERBOT=/opt/gopherbot/gopherbot
+if [ -x $HOME/gopherbot ]
+then
+    GOPHERBOT="$HOME/gopherbot"
+fi
+
+$GOPHERBOT decrypt -f $HOME/custom/terraform.enc > terraform.sh
+</file_content file: clu/jobs/init.sh>
+<preamble file: clu/jobs/sleep.sh>
+This job script is referenced in robot.yaml, and is executed by Gopherbot when the corresponding job runs.
+</preamble>
+<file_content file: clu/jobs/sleep.sh>
+#!/bin/bash -e
+
+# jobs/sleep.sh - just sleep for a while, for dev
+
+# NOTE: this sample job uses the bot library, most jobs probably won't
+source $GOPHER_INSTALLDIR/lib/gopherbot_v1.sh
+
+echo "Nighty-night!"
+sleep 20m
+echo "*yawn*"
+</file_content file: clu/jobs/sleep.sh>
+<preamble file: clu/lib/gopher-ai.rb>
+This job script is referenced in robot.yaml, and is executed by Gopherbot when the corresponding job runs.
+</preamble>
+<file_content file: clu/lib/gopher-ai.rb>
+require "openai"
+require 'json'
+require 'base64'
+require 'digest/sha1'
+
+class ConversationStatus
+  attr_accessor :valid, :error, :tokens, :in_progress
+  def initialize(valid, error, tokens, in_progress)
+    @valid = valid
+    @error = error
+    @tokens = tokens
+    @in_progress = in_progress
+  end
+end
+
+class OpenAI_API
+  attr_reader :status, :cfg
+
+  ShortTermMemoryPrefix = "ai-conversation"
+  ShortTermMemoryDebugPrefix = "ai-debug"
+  DefaultProfile = "default"
+  PartialLineLength = 42
+  ThinkingStrings = [ "pondering", "working", "thinking", "cogitating", "processing", "analyzing" ]
+
+  def initialize(bot,
+      direct:,
+      botalias:,
+      botname:
+    )
+    # For now, static profile
+    @profile = DefaultProfile
+    @direct = direct
+    @alias = botalias
+    @name = botname
+    @bot = direct ? bot : bot.Threaded
+    in_progress = false
+    if direct
+      @memory = ShortTermMemoryPrefix
+      exclusive = "#{ShortTermMemoryPrefix}:#{ENV["GOPHER_USER_ID"]}"
+    else
+      @memory = "#{ShortTermMemoryPrefix}:#{bot.thread_id}"
+      exclusive = "#{ShortTermMemoryPrefix}:#{bot.channel}:#{bot.thread_id}"
+    end
+    @exchanges = []
+    @tokens = 0
+    @valid = true
+    debug_memory = @bot.Recall(ShortTermMemoryDebugPrefix + ":" + bot.thread_id, true)
+    @debug = (debug_memory.length > 0)
+
+    error = nil
+    unless bot.Exclusive(exclusive, false)
+      verb = bot.RandomString(ThinkingStrings)
+      error = "(message not processed, AI still #{verb}; you can resend or edit after reply)"
+      @status = ConversationStatus.new(false, error, 0, false)
+      return
+    end
+    encoded_state = bot.Recall(@memory, true)
+    if encoded_state.length > 0
+      state = decode_state(encoded_state)
+      in_progress = true
+      @profile, @tokens, @owner, @exchanges = state.values_at("profile", "tokens", "owner", "exchanges")
+    else
+      @owner = ENV["GOPHER_USER"]
+    end
+    @cfg = bot.GetTaskConfig()
+    @settings = @cfg["Profiles"][@profile]
+    unless @settings
+      @profile = "default"
+      @settings = @cfg["Profiles"][@profile]
+      @bot.Log(:warn, "no settings found for profile #{@profile}, falling back to 'default'")
+    end
+    @system = @settings["system"]
+    @max_context = @settings["max_context"]
+
+    @org = ENV["OPENAI_ORGANIZATION_ID"]
+    token = ENV['OPENAI_KEY']
+    unless token and token.length > 0
+      @valid = false
+      botalias = @bot.GetBotAttribute("alias")
+      error = "Sorry, no OPENAI_KEY set"
+    end
+    if @valid
+      OpenAI.configure do |config|
+        config.access_token = token
+        if @org
+          config.organization_id = @org
+        end
+      end
+      @client = OpenAI::Client.new
+    end
+    @status = ConversationStatus.new(@valid, error, @tokens, in_progress)
+  end
+
+  def draw(prompt)
+    response = @client.images.generate(parameters: { prompt: prompt, size: "512x512" })
+    return response.dig("data", 0, "url")
+  end
+
+  def reset()
+    # Wipe the memory
+    @bot.Remember(@memory, "", true)
+    if !@direct
+      @bot.Unsubscribe()
+    end
+  end
+
+  def say_chunk(chunk, final = false)
+    if ENV["GOPHER_PROTOCOL"] == "slack"
+      chunk = chunk.gsub(/```\w+\n/) { |language| "#{language[3..-2]}:\n```\n" }
+    end
+    chunk.chomp!
+    chunk.strip!
+    return if chunk == ""
+    unless final
+      chunk += " (...)"
+    end
+    @bot.Say(chunk)
+  end
+
+  def query(input)
+    input = "#{@bot.user} says: #{input}"
+    while true
+      messages, partial = build_messages(input)
+      parameters = @settings["params"]
+      parameters["user"] = Digest::SHA1.hexdigest(ENV["GOPHER_USER_ID"])
+      if @debug
+        @bot.Say("Query parameters: #{parameters.to_json}", :fixed)
+        @bot.Say("Chat (lines truncated):\n#{partial}", :fixed)
+      end
+      parameters[:messages] = messages
+      reply = ""
+      accumulated_chunks = ""
+      replied = false
+  
+      parameters[:stream] = proc do |chunk, _bytesize|
+        # @bot.Log(:debug, "Chunk: #{chunk}")
+        if chunk["choices"]
+          content = chunk["choices"][0]["delta"]["content"] ? chunk["choices"][0]["delta"]["content"] : ""
+          finished = chunk["choices"][0]["finish_reason"]
+          unless finished
+            replied = true
+            reply += content
+            accumulated_chunks += content
+            paragraph, remaining = accumulated_chunks.split("\n", 2)
+            if accumulated_chunks.include?("\n")
+              paragraph, remaining = accumulated_chunks.split("\n", 2)
+              say_chunk(paragraph)
+              accumulated_chunks = remaining || ""
+            end
+          end
+        end
+      end
+  
+      @client.chat(parameters: parameters)
+      
+      ## NOTE: This is an ugly hack because the library doesn't
+      ## return errors in streaming mode. :-(
+      unless replied
+        parameters.delete(:stream)
+        response = @client.chat(parameters: parameters)
+        if response["error"]
+          message = response["error"]["message"]
+          if message.match?(/tokens/i)
+            @exchanges.shift
+            @bot.Log(:warn, "token error, dropping an exchange and re-trying")
+            next
+          end
+          @bot.SayThread("Sorry, there was an error - '#{message}'")
+          @bot.Log(:error, "connecting to openai: #{message}")
+        else
+          @bot.Log(:error, "Response after no streaming data: #{response}")
+        end
+        exit(0)
+      end
+  
+      say_chunk(accumulated_chunks, true) if accumulated_chunks.length > 0
+      reply.strip!
+      if input.length > 0
+        @exchanges << {
+          "human" => input,
+          "ai" => reply
+        }
+      end
+      @bot.Remember(@memory, encode_state, true)
+      break # Exit the loop when no token error occurred
+    end
+  end
+
+  def build_messages(input)
+    messages = [
+      {
+        role: "system", content: @system
+      }
+    ]
+    partial = String.new
+    final = nil
+    if input.length > 0
+      final = {
+        role: "user", content: input
+      }
+    end
+    @exchanges.each do |exchange|
+      contents, partial_string = exchange_data(exchange)
+      messages += contents
+      partial += partial_string
+    end
+    if final
+      messages.append(final)
+      partial += "user: #{input}"
+    end
+    return messages, partial
+  end
+
+  def encode_state
+    state = {
+      "profile": @profile,
+      "tokens": @tokens,
+      "owner": @owner,
+      "exchanges": @exchanges
+    }
+    json = state.to_json
+    Base64.strict_encode64(json)
+  end
+
+  def decode_state(encoded_state)
+    json = Base64.strict_decode64(encoded_state)
+    JSON.parse(json)
+  end
+
+  ## Courtesy of OpenAI / Astro Boy
+  def truncate_line(str)
+    truncated_str = str.split("\n").first
+    if truncated_str.length > PartialLineLength
+      truncated_str = truncated_str[0..PartialLineLength-1] + " ..."
+    end
+    return truncated_str
+  end
+
+  def exchange_data(exchange)
+    contents = [
+      {
+        role: "user", content: exchange["human"]
+      },
+      {
+        role: "assistant", content: exchange["ai"]
+      }
+    ]
+    human_line = "user: #{exchange["human"]}"
+    ai_line = "assistant: #{exchange["ai"]}"
+    partial = "#{truncate_line(human_line)}\n#{truncate_line(ai_line)}\n"
+    return contents, partial
+  end
+end
+</file_content file: clu/lib/gopher-ai.rb>
+<preamble file: clu/plugins/ai.rb>
+This is the script for a plugin defined in robot.yaml
+</preamble>
+<file_content file: clu/plugins/ai.rb>
+#!/usr/bin/ruby
+
+# load the Gopherbot ruby library and instantiate the bot
+require 'gopherbot_v1'
+bot = Robot.new()
+
+# Found it Floyd's /lib
+require 'gopher-ai'
+
+command = ARGV.shift()
+
+defaultConfig = <<'DEFCONFIG'
+---
+DEFCONFIG
+
+case command
+when "init"
+  exit(0)
+when "configure"
+  # puts(defaultConfig)
+  exit(0)
+end
+
+direct = (bot.channel == "")
+cmdmode = ENV["GOPHER_CMDMODE"]
+
+botalias = bot.GetBotAttribute("alias").attr
+botname = bot.GetBotAttribute("name").attr
+
+# When command mode = "alias", reproduce the logic of builtin-fallback
+if command == "catchall" and cmdmode == "alias"
+  if direct
+    bot.Say("Command not found; try your command in a channel, or use '#{botalias}help'")
+  else
+    bot.SayThread("No command matched in channel '#{ENV["GOPHER_CHANNEL"]}'; try '#{botalias}help'")
+  end
+  exit(0)
+end
+
+case command
+# For dedicated AI channels, use a MessageMatcher of .* and ChannelOnly: true
+when "ambient", "catchall", "subscribed"
+  ai = OpenAI_API.new(bot, direct: direct, botalias: botalias, botname: botname)
+  unless ai.status.valid
+    if ai.status.error
+      bot.ReplyThread(ai.status.error)
+    end
+    exit(0)
+  end
+  prompt = ARGV.shift()
+  cfg = ai.cfg
+  unless ai.status.in_progress
+    hold_messages = cfg["WaitMessages"]
+    hold_message = bot.RandomString(hold_messages)
+    bot.Subscribe()
+    bot.ReplyThread("(#{hold_message})")
+  else
+    bot.Say("(#{bot.RandomString(OpenAI_API::ThinkingStrings)})")
+  end
+  type = ai.status.in_progress ? "continuing" : "starting"
+  bot.Log(:debug, "#{type} AI conversation with #{ENV["GOPHER_USER"]} in #{ENV["GOPHER_CHANNEL"]}/#{ENV["GOPHER_THREAD_ID"]}")
+  ai.query(prompt)
+when "close"
+  ai = OpenAI_API.new(bot, direct: direct, botalias: botalias, botname: botname)
+  unless ai.status.valid
+    if ai.status.error
+      bot.ReplyThread(ai.status.error)
+    end
+    exit(0)
+  end
+  if ai.status.in_progress
+    if direct
+      bot.Say("Ok, I'll forget this conversation")
+    else
+      bot.Say("Ok, I'll forget this conversation and unsubscribe this thread")
+    end
+    ai.reset()
+  else
+    if direct or bot.threaded_message
+      bot.Say("I have no memory of a conversation in progress")
+    else
+      bot.Say("That command doesn't apply in this context")
+    end
+  end
+when "status"
+  if bot.threaded_message or direct
+    ai = OpenAI_API.new(bot, direct: direct, botalias: botalias, botname: botname)
+    if ai.status.valid
+      if ai.status.in_progress
+        bot.Reply("I hear you and remember an AI conversation totalling #{ai.status.tokens} tokens")
+      else
+        bot.Reply("I hear you, but I have no memory of a conversation in this thread; my short-term is only about half a day - you can start a new AI conversation by addressing me in the main channel")
+      end
+    else
+      bot.Reply(ai.status.error)
+    end
+  else
+    bot.Reply("I can hear you")
+  end
+when "image"
+  ai = OpenAI_API.new(bot, direct: direct, botalias: botalias, botname: botname)
+  unless ai.valid
+    bot.SayThread(ai.error)
+    exit(0)
+  end
+  cfg = ai.cfg
+  hold_messages = cfg["DrawMessages"]
+  hold_message = bot.RandomString(hold_messages)
+  bot.Say("(#{hold_message})")
+  url = ai.draw(ARGV.shift)
+  bot.Say(url)
+when "debug"
+  unless bot.threaded_message or direct
+    bot.SayThread("You can only initialize debugging in a conversation thread")
+    exit(0)
+  end
+  bot.Remember(OpenAI_API::ShortTermMemoryDebugPrefix + ":" + bot.thread_id, "true", true)
+  bot.SayThread("(ok, debugging output is enabled for this conversation)")
+end
+</file_content file: clu/plugins/ai.rb>
+<preamble file: clu/plugins/echo.sh>
+This is the script for a plugin defined in robot.yaml
+</preamble>
+<file_content file: clu/plugins/echo.sh>
+#!/bin/bash -e
+
+# echo.sh - trivial shell plugin example for Gopherbot
+
+# START Boilerplate
+[ -z "$GOPHER_INSTALLDIR" ] && { echo "GOPHER_INSTALLDIR not set" >&2; exit 1; }
+source $GOPHER_INSTALLDIR/lib/gopherbot_v1.sh
+
+command=$1
+shift
+# END Boilerplate
+
+configure(){
+	cat <<"EOF"
+---
+Help:
+- Keywords: [ "repeat" ]
+  Helptext: [ "(bot), repeat (me) - prompt for and trivially repeat a phrase" ]
+- Keywords: [ "echo" ]
+  Helptext: [ "(bot), echo <something> - tell the bot to say <something>" ]
+CommandMatchers:
+- Command: "repeat"
+  Regex: '(?i:repeat( me)?)'
+## This will match the collapsed version of the message;
+## 'hello\nworld' will echo 'hello world'
+- Command: "echo"
+  Regex: '(?i:echo ([^\n]*))'
+## This will match the full message; 'hello\nworld' will echo
+## 'hello\nworld'
+- Command: "echo"
+  Regex: '(?i:necho (.*))'
+EOF
+}
+
+case "$command" in
+# NOTE: only "configure" should print anything to stdout
+	"configure")
+		configure
+		;;
+	"echo")
+		echo "Hello, world: $1"
+		echo "Hello, error world: $1" >&2
+		Say "You *told* me to _say_ '$1'"
+		BOTID=$(GetBotAttribute id)
+		Say "I think my ID is $BOTID"
+		AddTask "say" "I said it, alright!"
+		AddTask "status" "I gave status, alright!"
+		# FinalTask "email-log"
+		# /bin/false
+		;;
+	"init")
+		echo "Clu starting up!"
+		ls -Fla ..
+		whoami
+		# FinalTask "email-log" "parsley@linuxjedi.org"
+		;;
+	"repeat")
+		REPEAT=$(PromptForReply SimpleString "What do you want me to repeat?")
+		RETVAL=$?
+		if [ $RETVAL -ne $GBRET_Ok ]
+		then
+			Reply "Sorry, I had a problem getting your reply: $RETVAL"
+		else
+			Reply "$REPEAT"
+		fi
+		# Yah, this makes no sense for repeat - but Clu is a test/debug bot!
+		Say "I'm a PLUGIN, and I think VERY_SECRET is: $VERY_SECRET"
+		SetParameter NOT_VERY_SECRET "$NOT_VERY_SECRET"
+
+		AddTask privtest
+		AddTask nonprivtest
+		;;
+esac
+</file_content file: clu/plugins/echo.sh>
+<preamble file: clu/plugins/format.sh>
+This is the script for a plugin defined in robot.yaml
+</preamble>
+<file_content file: clu/plugins/format.sh>
+#!/bin/bash -e
+
+source $GOPHER_INSTALLDIR/lib/gopherbot_v1.sh
+
+COMMAND=$1
+shift
+
+configure(){
+  cat <<"EOF"
+Channels:
+- general
+Help:
+- Keywords: [ "format", "world" ]
+  Helptext: [ "(bot), format world - exercise formatting options" ]
+CommandMatchers:
+- Regex: '(?i:format world)'
+  Command: "format"
+- Regex: '(?i:format fixed)'
+  Command: "fixed"
+- Regex: '(?i:format variable)'
+  Command: "variable"
+- Regex: '(?i:format raw)'
+  Command: "raw"
+- Regex: '(?i:split fixed)'
+  Command: "longfixed"
+- Regex: '(?i:split raw)'
+  Command: "longraw"
+EOF
+}
+
+case "$COMMAND" in
+  "configure")
+    configure
+    ;;
+  "format")
+    # Change default format
+    MessageFormat Variable
+    PROTO=$(GetBotAttribute protocol)
+    Say "Hello, $PROTO World!"
+    # Use default format
+    Say 'Default _Italics_ <One> :100: *Bold* `Code` @parsley <https://cnn.com|*CNN*>'
+    # Raw
+    Say -r 'Raw _Italics_ <One> :100: *Bold* `Code` @parsley <https://cnn.com|*CNN*>'
+    # Variable
+    Say -v 'Variable _Italics_ <One> :100: *Bold* `Code` @parsley <https://cnn.com|*CNN*>'
+    # Fixed
+    Say -f 'Fixed _Italics_ <One> :100: *Bold* `Code` @parsley <https://cnn.com|*CNN*>'
+    ;;
+  "fixed")
+    Say -f '_Italics_ <One> *Bold* `Code` @parsley <https://cnn.com|*CNN*>'
+    ;;
+  "variable")
+    Say -v '_Italics_ <One> *Bold* `Code` @parsley <https://cnn.com|*CNN*>'
+    ;;
+  "raw")
+    Say -r '_Italics_ <One> *Bold* `Code` @parsley <https://cnn.com|*CNN*>'
+    ;;
+  "longfixed")
+    FTEXT=$(cat <<EOF
+2015/10/21 07:28:07 Initialized logging ...
+2015/10/21 07:28:07 No private environment loaded from '.env': open : no such file or directory
+2015/10/21 07:28:07 Starting up with config dir: custom, and install dir: /opt/gopherbot
+2015/10/21 07:28:07 Privilege separation not in use
+2015/10/21 07:28:07 Info: Successfully decrypted binary encryption key 'custom/binary-encrypted-key'
+2015/10/21 07:28:07 Info: Loading initial pre-connection configuration
+2015/10/21 07:28:07 Info: Set timezone: America/New_York
+2015/10/21 07:28:07 Info: Initialized file history provider with directory: 'history'; serving on: ':9000'
+2015/10/21 07:28:07 Info: Starting fileserver listener for file history provider
+2015/10/21 07:28:07 Info: Loading configuration for plugin 'builtin-totp', type taskGo
+2015/10/21 07:28:07 Info: Plugin 'builtin-totp' will be available in channels ["general" "random" "chat" "botdev" "clu-jobs"]
+2015/10/21 07:28:07 Info: Loading configuration for plugin 'builtin-history', type taskGo
+2015/10/21 07:28:07 Info: Plugin 'builtin-history' has no channel restrictions configured; all channels: true
+2015/10/21 07:28:07 Info: Loading configuration for plugin 'help', type taskGo
+2015/10/21 07:28:07 Info: Plugin 'help' has no channel restrictions configured; all channels: true
+2015/10/21 07:28:07 Info: Loading configuration for plugin 'memes', type taskGo
+2015/10/21 07:28:07 Info: Plugin 'memes' will be available in channels ["general" "random" "chat" "botdev" "clu-jobs"]
+2015/10/21 07:28:07 Info: Loading configuration for plugin 'builtin-jobcmd', type taskGo
+2015/10/21 07:28:07 Info: Plugin 'builtin-jobcmd' has no channel restrictions configured; all channels: true
+2015/10/21 07:28:07 Info: Loading configuration for plugin 'groups', type taskGo
+2015/10/21 07:28:07 Info: Plugin 'groups' will be available in channels ["general" "random" "chat" "botdev" "clu-jobs"]
+2015/10/21 07:28:07 Warning: Plugin 'groups' has custom config, but none is configured
+2015/10/21 07:28:07 Info: Loading configuration for plugin 'duo', type taskGo
+2015/10/21 07:28:07 Info: Plugin 'duo' will be available in channels ["general" "random" "chat" "botdev" "clu-jobs"]
+2015/10/21 07:28:07 Info: Loading configuration for plugin 'lists', type taskGo
+2015/10/21 07:28:07 Info: Plugin 'lists' will be available in channels ["general" "random" "chat" "botdev" "clu-jobs"]
+2015/10/21 07:28:07 Info: Loading configuration for plugin 'builtin-dmadmin', type taskGo
+2015/10/21 07:28:07 Info: Plugin 'builtin-dmadmin' will be available in channels ["general" "random" "chat" "botdev" "clu-jobs"]
+2015/10/21 07:28:07 Info: Loading configuration for plugin 'knock', type taskGo
+2015/10/21 07:28:07 Info: Plugin 'knock' will be available in channels ["general" "random" "chat" "botdev" "clu-jobs"]
+2015/10/21 07:28:07 Info: Loading configuration for plugin 'links', type taskGo
+2015/10/21 07:28:07 Info: Plugin 'links' will be available in channels ["general" "random" "chat" "botdev" "clu-jobs"]
+2015/10/21 07:28:07 Info: Loading configuration for plugin 'ping', type taskGo
+2015/10/21 07:28:07 Info: Plugin 'ping' has no channel restrictions configured; all channels: true
+2015/10/21 07:28:07 Info: Loading configuration for plugin 'slackutil', type taskGo
+2015/10/21 07:28:07 Info: Plugin 'slackutil' will be available in channels ["general" "random" "chat" "botdev" "clu-jobs"]
+2015/10/21 07:28:07 Info: Loading configuration for plugin 'builtin-fallback', type taskGo
+2015/10/21 07:28:07 Info: Plugin/Job 'builtin-fallback' is disabled by configuration
+2015/10/21 07:28:07 Info: Loading configuration for plugin 'builtin-help', type taskGo
+2015/10/21 07:28:07 Info: Plugin 'builtin-help' has no channel restrictions configured; all channels: true
+2015/10/21 07:28:07 Info: Loading configuration for plugin 'builtin-admin', type taskGo
+2015/10/21 07:28:07 Info: Plugin 'builtin-admin' has no channel restrictions configured; all channels: true
+2015/10/21 07:28:07 Info: Loading configuration for plugin 'builtin-logging', type taskGo
+2015/10/21 07:28:07 Info: Plugin 'builtin-logging' will be available in channels ["general" "random" "chat" "botdev" "clu-jobs"]
+2015/10/21 07:28:07 Info: Loading configuration for job 'pause-notifies', type taskGo
+EOF
+)
+    Say -f "$FTEXT"
+    ;;
+  "longraw")
+    FTEXT=$(cat <<"EOF"
+```2015/10/21 07:28:07 @parsley @nobody Initialized logging ...
+2015/10/21 07:28:07 No private environment loaded from '.env': open : no such file or directory
+2015/10/21 07:28:07 Starting up with config dir: custom, and install dir: /opt/gopherbot
+2015/10/21 07:28:07 Privilege separation not in use
+2015/10/21 07:28:07 Info: Successfully decrypted binary encryption key 'custom/binary-encrypted-key'
+```
+2015/10/21 07:28:07 Info: @parsley Loading initial pre-connection configuration
+2015/10/21 07:28:07 Info: Set timezone: America/New_York
+2015/10/21 07:28:07 Info: Initialized file history provider with directory: 'history'; serving on: ':9000'
+2015/10/21 07:28:07 Info: Starting fileserver listener for file history provider
+2015/10/21 07:28:07 Info: Loading configuration for plugin 'builtin-totp', type taskGo
+2015/10/21 07:28:07 Info: Plugin 'builtin-totp' will be available in channels ["general" "random" "chat" "botdev" "clu-jobs"]
+2015/10/21 07:28:07 Info: Loading configuration for plugin 'builtin-history', type taskGo
+2015/10/21 07:28:07 Info: Plugin 'builtin-history' has no channel restrictions configured; all channels: true
+2015/10/21 07:28:07 Info: Loading configuration for plugin 'help', type taskGo
+2015/10/21 07:28:07 Info: Plugin 'help' has no channel restrictions configured; all channels: true
+2015/10/21 07:28:07 Info: Loading configuration for plugin 'memes', type taskGo
+2015/10/21 07:28:07 Info: Plugin 'memes' will be available in channels ["general" "random" "chat" "botdev" "clu-jobs"]
+2015/10/21 07:28:07 Info: Loading configuration for plugin 'builtin-jobcmd', type taskGo
+2015/10/21 07:28:07 Info: Plugin 'builtin-jobcmd' has no channel restrictions configured; all channels: true
+2015/10/21 07:28:07 Info: Loading configuration for plugin 'groups', type taskGo
+2015/10/21 07:28:07 Info: Plugin 'groups' will be available in channels ["general" "random" "chat" "botdev" "clu-jobs"]
+2015/10/21 07:28:07 Warning: Plugin 'groups' has custom config, but none is configured
+2015/10/21 07:28:07 Info: Loading configuration for plugin 'duo', type taskGo
+2015/10/21 07:28:07 Info: Plugin 'duo' will be available in channels ["general" "random" "chat" "botdev" "clu-jobs"]
+2015/10/21 07:28:07 Info: Loading configuration for plugin 'lists', type taskGo
+2015/10/21 07:28:07 Info: Plugin 'lists' will be available in channels ["general" "random" "chat" "botdev" "clu-jobs"]
+2015/10/21 07:28:07 Info: Loading configuration for plugin 'builtin-dmadmin', type taskGo
+2015/10/21 07:28:07 Info: Plugin 'builtin-dmadmin' will be available in channels ["general" "random" "chat" "botdev" "clu-jobs"]
+2015/10/21 07:28:07 Info: Loading configuration for plugin 'knock', type taskGo
+2015/10/21 07:28:07 Info: Plugin 'knock' will be available in channels ["general" "random" "chat" "botdev" "clu-jobs"]
+2015/10/21 07:28:07 Info: Loading configuration for plugin 'links', type taskGo
+```2015/10/21 07:28:07 Info: Plugin 'links' will be available in channels ["general" "random" "chat" "botdev" "clu-jobs"]
+2015/10/21 07:28:07 Info: Loading configuration for plugin 'ping', type taskGo
+2015/10/21 07:28:07 Info: Plugin 'ping' has no channel restrictions configured; all channels: true
+2015/10/21 07:28:07 Info: Loading configuration for plugin 'slackutil', type taskGo
+2015/10/21 07:28:07 Info: Plugin 'slackutil' will be available in channels ["general" "random" "chat" "botdev" "clu-jobs"]
+2015/10/21 07:28:07 Info: Loading configuration for plugin 'builtin-fallback', type taskGo
+2015/10/21 07:28:07 Info: Plugin/Job 'builtin-fallback' is disabled by configuration
+2015/10/21 07:28:07 Info: Loading configuration for plugin 'builtin-help', type taskGo
+2015/10/21 07:28:07 Info: Plugin 'builtin-help' has no channel restrictions configured; all channels: true
+2015/10/21 07:28:07 Info: Loading configuration for plugin 'builtin-admin', type taskGo
+2015/10/21 07:28:07 Info: Plugin 'builtin-admin' has no channel restrictions configured; all channels: true
+2015/10/21 07:28:07 Info: Loading configuration for plugin 'builtin-logging', type taskGo
+2015/10/21 07:28:07 Info: Plugin 'builtin-logging' will be available in channels ["general" "random" "chat" "botdev" "clu-jobs"]
+2015/10/21 07:28:07 Info: Loading configuration for job 'pause-notifies', type taskGo
+```
+EOF
+)
+    Say "$FTEXT"
+    ;;
+esac
+</file_content file: clu/plugins/format.sh>
+<preamble file: clu/plugins/rubytest.rb>
+This is the script for a plugin defined in robot.yaml
+</preamble>
+<file_content file: clu/plugins/rubytest.rb>
+#!/usr/bin/ruby
+
+# boilerplate
+require 'gopherbot_v1'
+
+bot = Robot.new()
+
+defaultConfig = <<'DEFCONFIG'
+AllowDirect: false
+Help:
+- Keywords: [ "say", "anything" ]
+  Helptext: [ "(bot), say anything - blurt out some crap to test ruby lib" ]
+CommandMatchers:
+- Regex: '(?i:say anything)'
+  Command: "sayit"
+DEFCONFIG
+
+command = ARGV.shift()
+
+case command
+when "configure"
+	puts defaultConfig
+	exit
+when "sayit"
+    bot.Say("Hello, World!")
+    bot.AddTask("say", ["I can say ANYTHING"])
+end
+</file_content file: clu/plugins/rubytest.rb>
+<preamble file: clu/ssh/config>
+This is the script for a plugin defined in robot.yaml
+</preamble>
+<file_content file: clu/ssh/config>
+ForwardAgent false
+CanonicalizeHostname yes
+CanonicalDomains hpc.virginia.edu arcs.virginia.edu virginia.edu
+Host rivanna*
+	User dlp7y
+	CheckHostIP no
+</file_content file: clu/ssh/config>
+<preamble file: clu/ssh/deploy_key.pub>
+pub key used for deploying the repository - grants read-only access to the git repo
+</preamble>
+<file_content file: clu/ssh/deploy_key.pub>
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDuddocPW5n1xlsj+zNPvi45TANOWKF6MwooY9FxNFduecWR0uVyD58gnT2rygi3ffG9RCaa6mcrrl2pqxB+drSNB5MWIlJ2Jc6O0fWQWbCI3tXLOsa7djxiTb+K0ncHLlOqy6qShEM/EMYTpGdWthgrddOJUY9M2ySRdy2wnYin39bWs/kxjygAKCHUHxHbj5tcvBTRfNYOWtxUz3+XvwBxJQSjrbvtxsETB61U7mtHp1knD6T/0p+DK/4ng65wRdEyODJmTqDPU/5N48ICe3DrL1x75QEV1d4Fq8eibc9zWTmjrLAHndQeZ59iLInRi14J+d9pACz4a2troBbycaixUl6A9qkO1P+UAocIfQnAWnxePqSwxMCRZqjbxTrYXQCa2TdrUWb+7tkCfkIHUV1OfmZzC/p1gMijo1VV4cNm+kSTuSXir1BXxsRW1iQ0w3t0cNdkTXb4gVIht9LUO+7AJ+TZwxrEwVji0+uJx6OT/ahOD+Y8C36kb4o+HoaLr0= parse@hakuin.localdomain
+</file_content file: clu/ssh/deploy_key.pub>
+<preamble file: clu/ssh/manage_key>
+encrypted read-write key used during Clu's setup to save his repository to a remote git repo
+</preamble>
+<file_content file: clu/ssh/manage_key>
+-----BEGIN OPENSSH PRIVATE KEY-----
+b3BlbnNzaC1rZXktdjEAAAAACmFlczI1Ni1jdHIAAAAGYmNyeXB0AAAAGAAAABAlKxMQh3
+YmC/1iqugFs0LPAAAAEAAAAAEAAAGXAAAAB3NzaC1yc2EAAAADAQABAAABgQDEZQQcFQVT
+wccAHxRJb6Qrrcjy++rgMBszEowccGmtAZajB8F5mt+EXlOh8VOwKnjpniq7w/SMMgWTxT
+Qui+nPSex4p92PP3sBAh6OukDBny0DVFEue0fwvL0LnJ+BjQ1ly5nEZWfo7WspuKgoVRqM
+IanZRipSfXyfgDG7pHsYK3RFjP/+dZwPfNImxgWUVVQa64oZ2/dEXV2Tg3mDFWcMYLaFSZ
+nTIVGdOzv4tVX7AIg1pMBHL4pxupH+GU+9CrRmcHy+QdLdG63cTOlxKLl0/lAEx7FVW83+
+tFD3ZOcuMuBJaPAHnWTl4v7plJX+REJmGv8MCEs96o7aZJu4uQxGm4WsMF2bhhKlk0LlbR
+NO46GfjSwhnOJKRiz1AYW74Z+Y0JNFyA8/4C1sQM4aipFY3LI/bKWykeS4+AaZKgxqn7bk
+THYFQ8o+YMvu2aakcgonRLoVMSmJKSzF8FfVZoYUu6GCzr9kykVKM947htMDUYxugEm8kc
+YHK+f50bOMONsAAAWQpDSQsYm+g7ShBnNXW5I2TQS1wUNFIZ4coLMCsiHmHX4s7wjm3oO2
+NkkaVSV/FM6R9dmBFmry5LWPFEQZ0tL8YBrCqWeBk1+OEsToTSOZXqwuPPVudrlVtGMqwP
+GjfWStlaIJH7wLnsc9chjhz31Gwi6/t1+wRqyI7uATdb8Qk9VHaXzT96ZFzTCV229qejS8
+0E4b+rZ7Ot9aQ9H1RsugH95fB1mvG2c6Lj7njf0jN7nmtf/CsoRODDXTg1te2SsGzz55kR
+qd9M7eNgOXFsDpQcqb17xllcc1MvoQp5iKg6ylyYsWzCXPEoynN97jpt/N/UcJ3PyL+twO
+EYadwY32h2dJW/k6dXaNSV5dSMlmY9YSjg+E8p6YF5rj/nE1PUje2eTsALUzTxBvfBh0L1
+vWxTVnLr7GrdO6wAb5sC6pV+MUv/SLmNQiz8BId/oSv8SXxLJx1KWaA0UNdg+qxgHHmOWp
+qjiPDe7KoWqUrb75WpSDPqsaYlvCssLwMdkf8QBn69e2d6EA4s2K157rHGgQWqqFwCArN6
+QDF2tpu0QdWtnOca47zeE8FwthPAhw9baFO8yfvWUSvAFNh9w9bXMBB/bPV6gvOe26ug8w
+I9rK1pB6l7LskB7tLB1eOvDOnyogQNT8DFI6fbWwCC4FLlMrEDf9lhOghxkSMd4Nxd4kD8
+19Z2M0HEFZlOXcbhb3S3OLo/PkkwX9pDE1qSv5/IoM4Ik+Het15becO495lBWzw0/sNIFn
+grivqXwoB1Igulqrv3PO/C/V1e0pkd7Gc62WJwDe/t7K5SRUMDv2l37KeGALijoRIOnhoJ
+lyx2mDa71nMHE1mwWKOyIlsOJ6NYKXOzfH1spAm62YKefAXSlcss9A9jyBDzr23NPxfnTF
+gXYEUbZ3ZF1zVA8wetjyuZO3JFQg1OJ0DfCr4pLqsa8gGJUv9HKnSpqnv3SpZpkUGmrX/a
+0MLr4PGlYt4TSuTTnr2ZTXl8syOARm6GeksZGu++JoMSVTR3jVjfFh/v2BioaBio29nqug
+v94rsv3yRf3SitSWG6G+Jd29nGRTYXQ+gWNH5zfpHLr5z5GmG7U4SStx4c4q9cg6laSK3K
+AmV0HFJrjzb5WTFQzhPdnXousSTZliM/UxJ6Oovb3CxUlrdJKLpHc6Nyw6sKxDTCD/CT71
+AcXQ+EH7NP0gQ5V9Ee7P1d1xaus5523reyjAsRzub8D4JDAGDiRiOU2THnDnHepuOTg11p
+HaihwzSEdAR9EDb3qyRx/4QKcI0YxR6dStv7OqSgw+cLNAw5JQZb8VHdlR1AP8qZ1CdF6H
+qe2ahXWT0gwI89IxdCky/lakMZR1jDI17mliuNLOepwX+Vevlj5jwEiIvxuGEHK1MelaBK
+o6lbZjGb2Lun6RpPGiO2VZjkYlVuabrl2AncBOjQskbkLceSQLCVTWL91bJd6XiZGBs9YV
+wDlaJtaUE2vQeOM9+m+LKLlI5UBpwBHp9uZOKa15GMt8wVRRnx4Oxv5sQk2WHRtfmDaRPi
+Izv4XdjWRmHxUPMBU1c1uA7t6C0w2ovpHLOE+7yfpp3zQUN4GTUMZn1K7/u+eRxVX9FF/6
+MucGrubL14i0shmdPobnl6b1v/8ITBn7EAGvK7U7H7MoQZjjfXMaqdOrhnx+TajHEgZ8oG
+lC3xOvFb4MuCDpXw1Gug8mkUn910bF5AlhoGnqF4ymdE1aN4bgmD0JMNUeiPTXPWUvMk04
+lca3FSF+G2UA8g8ZVlDxweeGIhlyN/fUW/tixhnLasG9dLqmOwQCbQD/koM+12ErR8jCU/
+WfHj6QamAj892lE5bdynwEstFJHsPhJcam82e5WGUE4ohAHIljAOckSs78aE/t1OS35jUQ
+6XZwLREmofOgdzv7iyzO2NT9fmQ=
+-----END OPENSSH PRIVATE KEY-----
+</file_content file: clu/ssh/manage_key>
+<preamble file: clu/ssh/manage_key.pub>
+corresponding pub key
+</preamble>
+<file_content file: clu/ssh/manage_key.pub>
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDEZQQcFQVTwccAHxRJb6Qrrcjy++rgMBszEowccGmtAZajB8F5mt+EXlOh8VOwKnjpniq7w/SMMgWTxTQui+nPSex4p92PP3sBAh6OukDBny0DVFEue0fwvL0LnJ+BjQ1ly5nEZWfo7WspuKgoVRqMIanZRipSfXyfgDG7pHsYK3RFjP/+dZwPfNImxgWUVVQa64oZ2/dEXV2Tg3mDFWcMYLaFSZnTIVGdOzv4tVX7AIg1pMBHL4pxupH+GU+9CrRmcHy+QdLdG63cTOlxKLl0/lAEx7FVW83+tFD3ZOcuMuBJaPAHnWTl4v7plJX+REJmGv8MCEs96o7aZJu4uQxGm4WsMF2bhhKlk0LlbRNO46GfjSwhnOJKRiz1AYW74Z+Y0JNFyA8/4C1sQM4aipFY3LI/bKWykeS4+AaZKgxqn7bkTHYFQ8o+YMvu2aakcgonRLoVMSmJKSzF8FfVZoYUu6GCzr9kykVKM947htMDUYxugEm8kcYHK+f50bOMONs= parse@hakuin.localdomain
+</file_content file: clu/ssh/manage_key.pub>
+<preamble file: clu/ssh/parse-key.enc>
+(unknown)
+</preamble>
+<file_content file: clu/ssh/parse-key.enc>
+#GOPHERBOT-BASE64-DATA
+dSj4QEdG02T0BW2uVH0X/IyHVXRfdcGZmHaVQ03QVeCW/w0c/P7L0CvpXzFTfdvaiH840qQhIQa/1
+JrJ5Z2fuQ9fUzXiPiUTvZOeUkgWre0Rhega9AnTaaYwA/Y3aZvsqt31Fx/4mmgaZA+L9ColZPO08S
+wccVHn/wxeDf2K+UkeyET8xipDKByLILyJ7tyP75IQ5IGJRP6h5F2bkBettT7cZiSB06Suz9v2a1k
+6uDphJtTvEhhw+PBno6HUI9uAN7DxUIvtCbe9sd1Jz1qlALSPbqQ9q03f198/tkZdyOBFmQkilOjv
+9FK+5QI915BIy4cPGI7GdHjC0X7/l3CCfrJmwkN6Sv9QMElZ3fCpCSKGl213GFoYBcQsjEX7lZZnM
+ZlYj3Y1aZb69tDRfKiSv2qPfp2OEzYl1WHqq5LxwoC8T4tV8yIjal956hIgjOJrCWgqdSBYvbgCpU
+ESnroyr8CszjFIRPDhB//G20pZrquHFgj8xQ9t/TrqVzte0x+arUiRoG2sm+cMjZi6pDuHzVlZcrr
+lAqWhFWdD3RJPxUJoMsnozwQoUhzrdmmrOT/ueVBAHJnTxhiik3zOnvLV4PWpbpvQI8ky35ycZpuJ
+nWJZfW/3mO3GLIZ3Zx66SDrIobgd2DiSC+3hTa6J
+</file_content file: clu/ssh/parse-key.enc>
+<preamble file: clu/ssh/readme.txt>
+
+</preamble>
+<file_content file: clu/ssh/readme.txt>
+The keys here are:
+* manage_rsa - dedicated encrypted read-write deploy key for Clu's custom repository
+* deploy_rsa.pub - corresponding to an unencrypted private key used for deploying to e.g. a container or new VM
+* robot_rsa - encrypted keypair the robot can use for CI/CD, ssh logins and other work
+</file_content file: clu/ssh/readme.txt>
+<preamble file: clu/ssh/robot_key>
+Encrypted ssh key used when Clu does a "git push"
+</preamble>
+<file_content file: clu/ssh/robot_key>
+-----BEGIN OPENSSH PRIVATE KEY-----
+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
+Oa+w==
+-----END OPENSSH PRIVATE KEY-----
+</file_content file: clu/ssh/robot_key>
+<preamble file: clu/ssh/robot_key.pub>
+(corresponding pub key)
+</preamble>
+<file_content file: clu/ssh/robot_key.pub>
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDOtKS/6A7Y1uGaCSZ1KHXbafvfyuKGl40N8O41/BKFhfTBYUwxnii5gGXMYXfxCD+wIMoU4k/MPz+XEvGykHLAZNEe4agayUOuN7qsQGDCa70k1+YyhIVqZaMH6BDVVZz3J/5SGbxKPZdKn2fZSPk8vF3PskgA2kpsHrkBDYP1xjuxI5P7VtMBFbrRTIZzw+LUs9gqQeC61fbuWSWdIncAXwrycx1wwTSqXVtnup2lMjBDVUcqTkFSUpooWtE8bExRuXXN3P7mIyEMY9bs9u/wOmZFuW0Fg7x52aJP5D8c17NHwvxHylOx3hO8fLjrUbJCarscRWj7AdVVih1P9f1Y1R7ZV3ZUijlIutUugbVyaGVyPPpfwC8K27qqkCJDIUKNS5ts7MW0DQee14gq7mmRutu69DpLDDg9F+IisqFWucF/o72x4TjtGZIFXgl95a3bgGG6LTY/oDTOKX0y+L5QqeHXHZgyxx93YKRGk68Csae5mYmWXi0FD7FdL1+86cWRX/16QIFvJkKuqM1G4rpptUjY8AK6PQ36QKP6n4Y2P3SbVSwO9JK4rEvpqBHN6yZOJpTJulesrK2jR9kd2cjHt/4tOmQIxJJtToChzAYqWWt/Nh980agU4B12f/zCGsEx+5RfLJtTGjdEO3LQvHPtC5kdaJnITW2TL7HikMvaVQ== clu
+</file_content file: clu/ssh/robot_key.pub>
+<preamble file: clu/tasks/privtest.sh>
+This is the script for a task defined in robot.yaml
+</preamble>
+<file_content file: clu/tasks/privtest.sh>
+#!/bin/bash
+
+# NOTE: this sample job uses the bot library, most jobs probably won't
+source $GOPHER_INSTALLDIR/lib/gopherbot_v1.sh
+
+Say "Task: $GOPHER_TASK_NAME, very secret: $VERY_SECRET, key name: $KEYNAME"
+Say "Task: $GOPHER_TASK_NAME, not very secret: $NOT_VERY_SECRET"
+</file_content file: clu/tasks/privtest.sh>
+<preamble file: clu/terraform.enc>
+File that can be decrypted with "gopherbot decrypt -f ..."
+</preamble>
+<file_content file: clu/terraform.enc>
+#GOPHERBOT-BASE64-DATA
+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
+</file_content file: clu/terraform.enc>
